@@ -135,3 +135,80 @@
   .heatmap-grid { gap: 4px; }
   .heatmap-cell { min-height: 42px; }
 }
+
+/* === INTERACTIVE HOVER & BUTTON EFFECTS === */
+
+/* Cards hover ripple effect */
+.expense-page .card {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative; overflow: hidden;
+}
+.expense-page .card::after {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,149,0,0.03), transparent);
+  transition: left 0.5s;
+}
+.expense-page .card:hover::after { left: 100%; }
+.expense-page .card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.06); }
+
+/* Summary cards bounce on hover */
+.expense-page .grid-4 .card {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+}
+.expense-page .grid-4 .card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+/* Tab hover glow */
+.exp-tab { position: relative; overflow: hidden; }
+.exp-tab::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at center, rgba(255,149,0,0.06), transparent 70%);
+  opacity: 0; transition: opacity 0.3s;
+}
+.exp-tab:hover::before { opacity: 1; }
+
+/* Hero badge pulse */
+.exp-mode-badge { animation: badgePulse 2s infinite; }
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(255,255,255,0); }
+}
+
+/* Button press effect */
+.exp-tab:active { transform: scale(0.97); }
+.payment-btn:active { transform: scale(0.95) !important; }
+.category-info-card:active { transform: scale(0.98) !important; }
+
+/* Heatmap cell tooltip-like effect */
+.heatmap-cell { position: relative; }
+.heatmap-cell:hover .heatmap-date { color: var(--orange); }
+.heatmap-cell:hover .heatmap-amount { transform: scale(1.1); }
+.heatmap-amount { transition: transform 0.2s; }
+
+/* Upload drag active state */
+.upload-container:active {
+  transform: scale(0.98); border-color: var(--green);
+  background: var(--green-light);
+}
+
+/* Analytics header underline animation */
+.exp-analytics-header h2 { position: relative; display: inline-block; }
+.exp-analytics-header h2::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 3px;
+  background: var(--orange); border-radius: 3px; transition: width 0.4s ease;
+}
+.exp-analytics:hover .exp-analytics-header h2::after { width: 100%; }
+
+/* Form input focus scale */
+.exp-tab-content input:focus,
+.exp-tab-content select:focus,
+.exp-tab-content textarea:focus {
+  transform: scale(1.01);
+  transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Delete/remove button spin */
+.remove-upload { transition: all 0.3s; }
+.remove-upload:hover { transform: rotate(90deg) scale(1.2); color: #fff; background: var(--red); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
