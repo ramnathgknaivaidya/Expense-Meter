@@ -1,73 +1,66 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
+import './transactions.css';
 
-const formatCurrency = (value) =>
-  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
+const formatCurrency = (v) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(v);
+const formatDate = (d) => new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 
-const formatDate = (dateStr) => {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-};
+const CAT_ICONS = { Salary: '💼', Freelance: '💻', Business: '🏪', Investment: '📈', Bonus: '🎁', Food: '🍔', Transport: '🚗', Housing: '🏠', Bills: '💡', Shopping: '🛍️', Healthcare: '🏥', Education: '🎓', Entertainment: '🍿', Travel: '✈️', Other: '💸' };
+const CATEGORIES = ['All', ...Object.keys(CAT_ICONS)];
+const PER_PAGE = 10;
 
-const MOCK_TRANSACTIONS = [
-  { id: 'tx_1', date: '2026-07-20', description: 'July salary credited', category: 'Salary', type: 'income', paymentMethod: 'Bank Transfer', amount: 50000, status: 'completed' },
-  { id: 'tx_2', date: '2026-07-19', description: 'Swiggy food order', category: 'Food', type: 'expense', paymentMethod: 'UPI', amount: 450, status: 'completed' },
-  { id: 'tx_3', date: '2026-07-18', description: 'Uber ride to office', category: 'Transport', type: 'expense', paymentMethod: 'UPI', amount: 320, status: 'completed' },
-  { id: 'tx_4', date: '2026-07-17', description: 'Freelance web project', category: 'Freelance', type: 'income', paymentMethod: 'Bank Transfer', amount: 12000, status: 'completed' },
-  { id: 'tx_5', date: '2026-07-16', description: 'Netflix subscription', category: 'Entertainment', type: 'expense', paymentMethod: 'Credit Card', amount: 649, status: 'completed' },
-  { id: 'tx_6', date: '2026-07-15', description: 'Electricity bill', category: 'Bills', type: 'expense', paymentMethod: 'UPI', amount: 1800, status: 'completed' },
-  { id: 'tx_7', date: '2026-07-14', description: 'Amazon shopping', category: 'Shopping', type: 'expense', paymentMethod: 'Credit Card', amount: 3200, status: 'completed' },
-  { id: 'tx_8', date: '2026-07-13', description: 'Dividend income', category: 'Investment', type: 'income', paymentMethod: 'Bank Transfer', amount: 3000, status: 'completed' },
-  { id: 'tx_9', date: '2026-07-12', description: 'Petrol refill', category: 'Transport', type: 'expense', paymentMethod: 'Cash', amount: 2500, status: 'completed' },
-  { id: 'tx_10', date: '2026-07-11', description: 'Coursera course purchase', category: 'Education', type: 'expense', paymentMethod: 'Debit Card', amount: 4500, status: 'completed' },
-  { id: 'tx_11', date: '2026-07-10', description: 'Side business revenue', category: 'Business', type: 'income', paymentMethod: 'UPI', amount: 8000, status: 'completed' },
-  { id: 'tx_12', date: '2026-07-09', description: 'Gym membership', category: 'Healthcare', type: 'expense', paymentMethod: 'UPI', amount: 1500, status: 'completed' },
-  { id: 'tx_13', date: '2026-07-08', description: 'Cafe coffee day', category: 'Food', type: 'expense', paymentMethod: 'Cash', amount: 280, status: 'completed' },
-  { id: 'tx_14', date: '2026-07-07', description: 'Mobile recharge', category: 'Bills', type: 'expense', paymentMethod: 'UPI', amount: 599, status: 'completed' },
-  { id: 'tx_15', date: '2026-07-06', description: 'Performance bonus', category: 'Bonus', type: 'income', paymentMethod: 'Bank Transfer', amount: 5000, status: 'completed' },
-  { id: 'tx_16', date: '2026-07-05', description: 'Zomato dinner', category: 'Food', type: 'expense', paymentMethod: 'UPI', amount: 780, status: 'completed' },
-  { id: 'tx_17', date: '2026-07-04', description: 'Water bill payment', category: 'Bills', type: 'expense', paymentMethod: 'UPI', amount: 400, status: 'completed' },
-  { id: 'tx_18', date: '2026-07-03', description: 'Flipkart electronics', category: 'Shopping', type: 'expense', paymentMethod: 'Credit Card', amount: 5600, status: 'completed' },
+const MOCK_TX = [
+  { id: 't1', date: '2026-07-20', type: 'income', category: 'Bonus', amount: 2000, paymentMethod: 'Bank Transfer', description: 'Performance bonus', status: 'Completed' },
+  { id: 't2', date: '2026-07-20', type: 'expense', category: 'Transport', amount: 3500, paymentMethod: 'UPI', description: 'Fuel refill', merchant: 'Indian Oil', status: 'Completed' },
+  { id: 't3', date: '2026-07-18', type: 'expense', category: 'Food', amount: 1000, paymentMethod: 'Cash', description: 'Lunch', merchant: 'Local Cafe', status: 'Completed' },
+  { id: 't4', date: '2026-07-16', type: 'expense', category: 'Entertainment', amount: 2000, paymentMethod: 'Debit Card', description: 'Subscriptions', merchant: 'Netflix', status: 'Completed' },
+  { id: 't5', date: '2026-07-15', type: 'income', category: 'Business', amount: 8000, paymentMethod: 'Card', description: 'Side business revenue', status: 'Completed' },
+  { id: 't6', date: '2026-07-14', type: 'expense', category: 'Education', amount: 5000, paymentMethod: 'UPI', description: 'Online course', merchant: 'Coursera', status: 'Completed' },
+  { id: 't7', date: '2026-07-12', type: 'expense', category: 'Healthcare', amount: 1500, paymentMethod: 'Cash', description: 'Medicine', merchant: 'Apollo Pharmacy', status: 'Completed' },
+  { id: 't8', date: '2026-07-10', type: 'income', category: 'Investment', amount: 3000, paymentMethod: 'Bank Transfer', description: 'Stock dividends', status: 'Completed' },
+  { id: 't9', date: '2026-07-08', type: 'expense', category: 'Shopping', amount: 2500, paymentMethod: 'Credit Card', description: 'Headphones', merchant: 'Amazon', status: 'Completed' },
+  { id: 't10', date: '2026-07-05', type: 'income', category: 'Freelance', amount: 12000, paymentMethod: 'UPI', description: 'Web dev project', status: 'Completed' },
+  { id: 't11', date: '2026-07-05', type: 'expense', category: 'Bills', amount: 3000, paymentMethod: 'Debit Card', description: 'Electricity', merchant: 'EB Board', status: 'Completed' },
+  { id: 't12', date: '2026-07-03', type: 'expense', category: 'Transport', amount: 2000, paymentMethod: 'UPI', description: 'Cab rides', merchant: 'Uber', status: 'Completed' },
+  { id: 't13', date: '2026-07-02', type: 'expense', category: 'Food', amount: 4500, paymentMethod: 'UPI', description: 'Food delivery', merchant: 'Swiggy', status: 'Completed' },
+  { id: 't14', date: '2026-07-01', type: 'income', category: 'Salary', amount: 50000, paymentMethod: 'Bank Transfer', description: 'July salary', status: 'Completed' },
+  { id: 't15', date: '2026-07-01', type: 'expense', category: 'Housing', amount: 15000, paymentMethod: 'Bank Transfer', description: 'Monthly rent', merchant: 'Landlord', status: 'Completed' },
+  { id: 't16', date: '2026-06-28', type: 'expense', category: 'Shopping', amount: 5600, paymentMethod: 'Credit Card', description: 'Electronics', merchant: 'Flipkart', status: 'Completed' },
+  { id: 't17', date: '2026-06-25', type: 'income', category: 'Freelance', amount: 7500, paymentMethod: 'UPI', description: 'Logo design', status: 'Completed' },
+  { id: 't18', date: '2026-06-22', type: 'expense', category: 'Food', amount: 780, paymentMethod: 'UPI', description: 'Dinner', merchant: 'Zomato', status: 'Completed' },
 ];
 
-const CATEGORIES = ['All', 'Salary', 'Freelance', 'Business', 'Investment', 'Bonus', 'Food', 'Transport', 'Bills', 'Shopping', 'Entertainment', 'Education', 'Healthcare'];
-const ITEMS_PER_PAGE = 8;
-
 export default function Transactions() {
+  const { user } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({ startDate: '', endDate: '', type: 'all', category: 'All', search: '' });
-  const [currentPage, setCurrentPage] = useState(1);
+  const [filters, setFilters] = useState({ type: 'all', category: 'All', search: '', startDate: '', endDate: '' });
+  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState('date');
+  const [sortDir, setSortDir] = useState('desc');
 
   useEffect(() => {
-    async function fetchTransactions() {
+    async function load() {
       setLoading(true);
       try {
-        const params = {};
-        if (filters.startDate) params.startDate = filters.startDate;
-        if (filters.endDate) params.endDate = filters.endDate;
-        if (filters.type !== 'all') params.type = filters.type;
-        if (filters.category !== 'All') params.category = filters.category;
-        params.limit = 50;
-
-        const res = await api.get('/transactions', { params });
-        setTransactions(res.data.results || res.data || []);
-      } catch (err) {
-        console.warn('API offline, using mock transactions');
-        setTransactions(MOCK_TRANSACTIONS);
-      } finally {
-        setLoading(false);
-      }
+        const res = await api.get('/transactions', { params: { limit: 50 } });
+        const data = res.data.results || res.data || [];
+        setTransactions(data.length > 0 ? data : MOCK_TX);
+      } catch { setTransactions(MOCK_TX); }
+      finally { setLoading(false); }
     }
-    fetchTransactions();
-  }, []);
+    load();
+  }, [user]);
 
-  const handleFilterChange = (field, value) => {
-    setFilters(prev => ({ ...prev, [field]: value }));
-    setCurrentPage(1);
+  const handleFilter = (key, val) => { setFilters(f => ({ ...f, [key]: val })); setPage(1); };
+
+  const handleSort = (col) => {
+    if (sortBy === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortBy(col); setSortDir('desc'); }
   };
 
-  // Client-side filtering
+  // Filter
   const filtered = transactions.filter(tx => {
     if (filters.type !== 'all' && tx.type !== filters.type) return false;
     if (filters.category !== 'All' && tx.category !== filters.category) return false;
@@ -75,100 +68,104 @@ export default function Transactions() {
     if (filters.endDate && tx.date > filters.endDate) return false;
     if (filters.search) {
       const q = filters.search.toLowerCase();
-      if (!tx.description?.toLowerCase().includes(q) && !tx.category?.toLowerCase().includes(q)) return false;
+      if (!tx.description?.toLowerCase().includes(q) && !tx.category?.toLowerCase().includes(q) && !tx.merchant?.toLowerCase().includes(q)) return false;
     }
     return true;
   });
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  // Sort
+  const sorted = [...filtered].sort((a, b) => {
+    let cmp = 0;
+    if (sortBy === 'date') cmp = new Date(a.date) - new Date(b.date);
+    else if (sortBy === 'amount') cmp = a.amount - b.amount;
+    else if (sortBy === 'category') cmp = a.category.localeCompare(b.category);
+    return sortDir === 'desc' ? -cmp : cmp;
+  });
 
-  if (loading) {
-    return (
-      <div className="page-body" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
-        <p style={{ color: 'var(--text-secondary)' }}>Loading transactions...</p>
-      </div>
-    );
-  }
+  const totalPages = Math.ceil(sorted.length / PER_PAGE);
+  const paginated = sorted.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+
+  const totalIn = filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+  const totalOut = filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+
+  if (loading) return <div className="page-body tx-loading"><div className="tx-loading-icon">🔄</div><p>Loading transactions...</p></div>;
 
   return (
-    <div className="page-body">
-      <div style={{ marginBottom: '20px' }}>
-        <h2 style={{ fontSize: '1.4rem', fontWeight: 700 }}>Transaction History</h2>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>View and filter all your income and expense records</p>
-      </div>
-
-      {/* Filter Bar */}
-      <div className="card" style={{ marginBottom: '18px', padding: '16px' }}>
-        <div className="filter-bar">
-          <input
-            type="date"
-            value={filters.startDate}
-            onChange={(e) => handleFilterChange('startDate', e.target.value)}
-            placeholder="Start Date"
-          />
-          <input
-            type="date"
-            value={filters.endDate}
-            onChange={(e) => handleFilterChange('endDate', e.target.value)}
-            placeholder="End Date"
-          />
-          <select value={filters.type} onChange={(e) => handleFilterChange('type', e.target.value)}>
-            <option value="all">All Types</option>
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
-          </select>
-          <select value={filters.category} onChange={(e) => handleFilterChange('category', e.target.value)}>
-            {CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Search transactions..."
-            value={filters.search}
-            onChange={(e) => handleFilterChange('search', e.target.value)}
-            style={{ flex: 1, minWidth: '180px' }}
-          />
+    <div className="page-body tx-page">
+      {/* Header */}
+      <div className="tx-header">
+        <div>
+          <h1>Transactions</h1>
+          <p>Complete history of all your financial activities</p>
+        </div>
+        <div className="tx-header-totals">
+          <div className="tx-total-badge income">↑ {formatCurrency(totalIn)}</div>
+          <div className="tx-total-badge expense">↓ {formatCurrency(totalOut)}</div>
+          <div className="tx-total-badge net">Net: {formatCurrency(totalIn - totalOut)}</div>
         </div>
       </div>
 
-      {/* Transactions Table */}
-      <div className="card">
-        {filtered.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-icon">🔍</div>
-            <p>No transactions found matching your filters</p>
+      {/* Filters */}
+      <div className="tx-filters-card">
+        <div className="tx-filters">
+          <div className="tx-filter-group">
+            <label>Type</label>
+            <select value={filters.type} onChange={e => handleFilter('type', e.target.value)}>
+              <option value="all">All</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
           </div>
+          <div className="tx-filter-group">
+            <label>Category</label>
+            <select value={filters.category} onChange={e => handleFilter('category', e.target.value)}>
+              {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div className="tx-filter-group">
+            <label>From</label>
+            <input type="date" value={filters.startDate} onChange={e => handleFilter('startDate', e.target.value)} />
+          </div>
+          <div className="tx-filter-group">
+            <label>To</label>
+            <input type="date" value={filters.endDate} onChange={e => handleFilter('endDate', e.target.value)} />
+          </div>
+          <div className="tx-filter-group tx-filter-search">
+            <label>Search</label>
+            <input type="text" placeholder="Search..." value={filters.search} onChange={e => handleFilter('search', e.target.value)} />
+          </div>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="tx-table-card">
+        {sorted.length === 0 ? (
+          <div className="empty-state"><div className="empty-icon">🔍</div><p>No transactions match your filters</p></div>
         ) : (
           <>
-            <div className="table-wrap">
-              <table>
+            <div className="tx-table-wrap">
+              <table className="tx-table">
                 <thead>
                   <tr>
-                    <th>Date</th>
+                    <th className="tx-th-sortable" onClick={() => handleSort('date')}>Date {sortBy === 'date' && (sortDir === 'desc' ? '↓' : '↑')}</th>
+                    <th>Type</th>
+                    <th className="tx-th-sortable" onClick={() => handleSort('category')}>Category {sortBy === 'category' && (sortDir === 'desc' ? '↓' : '↑')}</th>
                     <th>Description</th>
-                    <th>Category</th>
-                    <th>Payment Method</th>
-                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th className="tx-th-sortable" onClick={() => handleSort('amount')}>Amount {sortBy === 'amount' && (sortDir === 'desc' ? '↓' : '↑')}</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {paginated.map(tx => (
-                    <tr key={tx.id}>
-                      <td>{formatDate(tx.date)}</td>
-                      <td style={{ fontWeight: 500 }}>{tx.description}</td>
-                      <td>{tx.category}</td>
-                      <td>{tx.paymentMethod}</td>
-                      <td style={{ fontWeight: 600, color: tx.type === 'income' ? 'var(--green)' : 'var(--red)' }}>
-                        {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
-                      </td>
-                      <td>
-                        <span className={`badge ${tx.type === 'income' ? 'badge-income' : 'badge-expense'}`}>
-                          {tx.status || 'completed'}
-                        </span>
-                      </td>
+                    <tr key={tx.id} className={`tx-row tx-row-${tx.type}`}>
+                      <td className="tx-td-date">{formatDate(tx.date)}</td>
+                      <td><span className={`tx-type-badge ${tx.type}`}>{tx.type === 'income' ? '↑ In' : '↓ Out'}</span></td>
+                      <td><span className="tx-cat">{CAT_ICONS[tx.category] || '💸'} {tx.category}</span></td>
+                      <td className="tx-td-desc">{tx.description}{tx.merchant ? ` • ${tx.merchant}` : ''}</td>
+                      <td className="tx-td-method">{tx.paymentMethod}</td>
+                      <td className={`tx-td-amount ${tx.type}`}>{tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}</td>
+                      <td><span className={`tx-status ${tx.status?.toLowerCase() || 'completed'}`}>{tx.status || 'Completed'}</span></td>
                     </tr>
                   ))}
                 </tbody>
@@ -176,49 +173,19 @@ export default function Transactions() {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
-                <button
-                  className="btn btn-sm btn-outline"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(p => p - 1)}
-                >
-                  ← Previous
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                  <button
-                    key={page}
-                    className={`btn btn-sm ${page === currentPage ? 'btn-primary' : 'btn-outline'}`}
-                    onClick={() => setCurrentPage(page)}
-                  >
-                    {page}
-                  </button>
+            <div className="tx-pagination">
+              <span className="tx-page-info">Showing {(page-1)*PER_PAGE + 1}–{Math.min(page*PER_PAGE, sorted.length)} of {sorted.length}</span>
+              <div className="tx-page-btns">
+                <button disabled={page === 1} onClick={() => setPage(p => p - 1)}>← Prev</button>
+                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map(p => (
+                  <button key={p} className={p === page ? 'active' : ''} onClick={() => setPage(p)}>{p}</button>
                 ))}
-                <button
-                  className="btn btn-sm btn-outline"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage(p => p + 1)}
-                >
-                  Next →
-                </button>
+                {totalPages > 5 && <span>...</span>}
+                <button disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>Next →</button>
               </div>
-            )}
+            </div>
           </>
         )}
-      </div>
-
-      {/* Summary Footer */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-        <span>Showing {paginated.length} of {filtered.length} transactions</span>
-        <span>
-          Total: <strong style={{ color: 'var(--green)' }}>
-            +{formatCurrency(filtered.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0))}
-          </strong>
-          {' / '}
-          <strong style={{ color: 'var(--red)' }}>
-            -{formatCurrency(filtered.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0))}
-          </strong>
-        </span>
       </div>
     </div>
   );
