@@ -98,13 +98,24 @@ export default function Dashboard() {
       <section className="dash-hero">
         <div className="dash-hero-text">
           <span className="dash-greeting">Welcome back, {user?.name || 'User'} 👋</span>
-          <h1>Financial Overview</h1>
-          <p>Here's what's happening with your money this month.</p>
+          <h1>Manage Your Money. Track Your Growth.</h1>
+          <p>Track income, monitor expenses, analyze spending habits, and build better financial practices.</p>
           {mock && <span className="dash-mock-badge">⚡ Demo Data</span>}
         </div>
-        <div className="dash-hero-actions">
-          <button className="dash-action-primary" onClick={() => navigate('/income')}>+ Add Income</button>
-          <button className="dash-action-secondary" onClick={() => navigate('/expense')}>+ Add Expense</button>
+        <div className="dash-hero-right">
+          <div className="dash-flow">
+            <div className="dash-flow-node"><span className="dash-flow-icon">💰</span><span className="dash-flow-label">Income</span><span className="dash-flow-val green">100%</span></div>
+            <span className="dash-flow-arrow">→</span>
+            <div className="dash-flow-node"><span className="dash-flow-icon">💸</span><span className="dash-flow-label">Expense</span><span className="dash-flow-val red">{expenseAnalytics.spendingRate}%</span></div>
+            <span className="dash-flow-arrow">→</span>
+            <div className="dash-flow-node"><span className="dash-flow-icon">🐷</span><span className="dash-flow-label">Savings</span><span className="dash-flow-val blue">{summary.savingsRate}%</span></div>
+            <span className="dash-flow-arrow">→</span>
+            <div className="dash-flow-node"><span className="dash-flow-icon">🚀</span><span className="dash-flow-label">Growth</span><span className="dash-flow-val gold">+{summary.balanceChange}%</span></div>
+          </div>
+          <div className="dash-hero-actions">
+            <button className="dash-action-primary" onClick={() => navigate('/income')}>💰 Add Income</button>
+            <button className="dash-action-secondary" onClick={() => navigate('/expense')}>💳 Add Expense</button>
+          </div>
         </div>
       </section>
 
