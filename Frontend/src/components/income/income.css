@@ -1,166 +1,54 @@
-/* ===========================
-   Income Page — Clean Finance Style
-=========================== */
+/* === Income Page === */
+.income-page { display: flex; flex-direction: column; gap: 22px; }
+.income-header h1 { font-size: 1.4rem; font-weight: 650; color: var(--text); }
+.income-header p { color: var(--text-secondary); margin-top: 4px; font-size: 0.88rem; }
 
-.income-page {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.income-header { margin-bottom: 0; }
-
-.income-header h1 {
-  font-size: 1.5rem;
-  font-weight: 650;
-  color: var(--text);
-  letter-spacing: -0.3px;
-}
-
-.income-header p {
-  color: var(--text-secondary);
-  margin-top: 4px;
-  font-size: 0.88rem;
-}
-
-/* Summary Cards */
 .summary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;
 }
-
 .summary-card {
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: 20px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-xs);
+  background: var(--surface); border-radius: var(--radius); padding: 20px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
   transition: transform var(--transition), box-shadow var(--transition);
 }
+.summary-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.summary-card h3 { color: var(--text-muted); margin-bottom: 8px; font-size: 0.78rem; font-weight: 500; }
+.summary-card h2 { color: var(--text); margin-bottom: 6px; font-size: 1.4rem; font-weight: 700; }
+.summary-card p { color: var(--text-secondary); font-size: 0.78rem; }
 
-.summary-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.summary-card h3 {
-  color: var(--text-muted);
-  margin-bottom: 8px;
-  font-size: 0.78rem;
-  font-weight: 500;
-}
-
-.summary-card h2 {
-  color: var(--text);
-  margin-bottom: 6px;
-  font-size: 1.4rem;
-  font-weight: 700;
-  letter-spacing: -0.3px;
-}
-
-.summary-card p {
-  color: var(--text-secondary);
-  font-size: 0.78rem;
-}
-
-/* Income Section */
 .income-section {
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: 22px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-xs);
+  background: var(--surface); border-radius: var(--radius); padding: 22px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
 }
+.income-section h3 { margin-bottom: 14px; color: var(--text); font-size: 0.95rem; font-weight: 600; }
 
-.income-section h3 {
-  margin-bottom: 14px;
-  color: var(--text);
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-/* Categories */
 .category-list { display: grid; gap: 8px; }
-
 .category-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 14px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  transition: background var(--transition);
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 14px; background: var(--bg); border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm); transition: background var(--transition);
 }
-
 .category-item:hover { background: var(--surface-hover); }
 .category-item span { font-size: 0.85rem; color: var(--text-secondary); }
 .category-item strong { color: var(--text); font-weight: 600; }
 
-/* Form */
 .income-form { display: grid; gap: 12px; }
-
-.income-form input,
-.income-form select {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1px solid var(--border-dark);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--text);
-  transition: border-color var(--transition);
+.income-form input, .income-form select {
+  width: 100%; padding: 10px 14px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--surface); color: var(--text);
 }
-
-.income-form input:focus,
-.income-form select:focus {
-  outline: none;
-  border-color: var(--green);
-}
-
+.income-form input:focus, .income-form select:focus { outline: none; border-color: var(--green); }
 .income-form button {
-  width: fit-content;
-  padding: 10px 18px;
-  background: var(--green);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-weight: 550;
-  transition: all var(--transition);
+  width: fit-content; padding: 10px 18px; background: var(--green);
+  color: white; border: none; border-radius: var(--radius-sm);
+  cursor: pointer; font-weight: 550; transition: background var(--transition);
 }
+.income-form button:hover { background: #16a34a; }
 
-.income-form button:hover {
-  background: #16a34a;
-  transform: translateY(-1px);
-}
-
-/* Chart Bars */
-.chart-bars {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  min-height: 180px;
-  padding: 12px 0;
-}
-
-.chart-bar {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
+.chart-bars { display: flex; align-items: flex-end; gap: 12px; min-height: 180px; padding: 12px 0; }
+.chart-bar { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .chart-bar span {
-  width: 100%;
-  border-radius: var(--radius-full) var(--radius-full) 0 0;
-  background: linear-gradient(180deg, var(--green), #6ee7b7);
-  min-height: 4px;
+  width: 100%; border-radius: var(--radius-full) var(--radius-full) 0 0;
+  background: linear-gradient(180deg, var(--green), #6ee7b7); min-height: 4px;
 }
-
-.chart-bar small {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  font-weight: 500;
-}
+.chart-bar small { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; }
