@@ -1,7 +1,7 @@
 /* === Expense Page === */
 .expense-page { display: flex; flex-direction: column; gap: 20px; }
-.expense-header h1 { font-size: 1.3rem; font-weight: 650; color: var(--text); }
-.expense-header p { color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; }
+.expense-header h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
+.expense-header p { color: var(--text-secondary); font-size: 0.92rem; margin-top: 4px; }
 
 .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 10px; }
 .category-info-card {
@@ -10,8 +10,8 @@
 }
 .category-info-card:hover { border-color: var(--border-dark); box-shadow: var(--shadow); }
 .category-info-icon { font-size: 1.1rem; width: 34px; height: 34px; border-radius: var(--radius-sm); background: #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.category-info-details h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; }
-.category-info-details p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+.category-info-details h4 { font-size: 0.9rem; font-weight: 650; margin-bottom: 2px; }
+.category-info-details p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
 
 .heatmap-wrap { margin-top: 14px; }
 .heatmap-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
