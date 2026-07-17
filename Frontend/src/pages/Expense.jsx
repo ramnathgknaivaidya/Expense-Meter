@@ -7,7 +7,6 @@ import ExpenseForm from '../components/expense/expenseForm';
 import ExpenseCharts from '../components/expense/expenseCharts';
 import '../components/expense/expense.css';
 
-// Formatted Mock data (mirrors seed data)
 const MOCK_EXPENSES = [
   { id: 'tx_2', type: 'expense', amount: 3500, category: 'Transport', paymentMethod: 'UPI', merchant: 'Indian Oil', description: 'Fuel refill', date: '2026-07-20T00:00:00.000Z' },
   { id: 'tx_3', type: 'expense', amount: 1000, category: 'Food', paymentMethod: 'Cash', merchant: 'Local Cafe', description: 'Lunch', date: '2026-07-18T00:00:00.000Z' },
@@ -29,12 +28,7 @@ const MOCK_BUDGET_STATUS = {
     { category: 'Shopping', limit: 5000, spent: 2500, remaining: 2500, percentage: 50, status: 'On Track' },
     { category: 'Bills', limit: 4000, spent: 3000, remaining: 1000, percentage: 75, status: 'On Track' },
   ],
-  summary: {
-    totalBudget: 33000,
-    totalSpent: 31500,
-    totalRemaining: 1500,
-    overallPercentage: 95,
-  },
+  summary: { totalBudget: 33000, totalSpent: 31500, totalRemaining: 1500, overallPercentage: 95 },
 };
 
 const MOCK_TRENDS = [
@@ -53,168 +47,112 @@ export default function Expense() {
   const [trends, setTrends] = useState(MOCK_TRENDS);
   const [loading, setLoading] = useState(true);
   const [isMockMode, setIsMockMode] = useState(false);
-
-  // Toast notification state
   const [toast, setToast] = useState(null);
+  const [activeSection, setActiveSection] = useState('form'); // 'form' | 'categories'
 
-  const showToast = (type, message) => {
-    setToast({ type, message });
-    setTimeout(() => setToast(null), 3000);
-  };
+  const showToast = (type, message) => { setToast({ type, message }); setTimeout(() => setToast(null), 3000); };
 
   const loadData = async () => {
     setLoading(true);
     try {
-      // 1. Fetch expenses
       const expenseRes = await api.get('/expense');
-      // 2. Fetch budgets
       const budgetRes = await api.get('/budget/status');
-      
-      // Calculate dynamic trends or default
       setExpenses(expenseRes.data || []);
       setBudgetStatus(budgetRes.data || MOCK_BUDGET_STATUS);
       setTrends(MOCK_TRENDS);
       setIsMockMode(false);
     } catch (error) {
-      console.warn('⚠️ Server connection offline, setting up Mock Storage Mode.');
-      // Look up local storage first for mockup updates
       const local = localStorage.getItem('local_expenses');
-      if (local) {
-        setExpenses(JSON.parse(local));
-      } else {
-        setExpenses(MOCK_EXPENSES);
-        localStorage.setItem('local_expenses', JSON.stringify(MOCK_EXPENSES));
-      }
+      if (local) { setExpenses(JSON.parse(local)); }
+      else { setExpenses(MOCK_EXPENSES); localStorage.setItem('local_expenses', JSON.stringify(MOCK_EXPENSES)); }
       setBudgetStatus(MOCK_BUDGET_STATUS);
       setTrends(MOCK_TRENDS);
       setIsMockMode(true);
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
-  useEffect(() => {
-    loadData();
-  }, [user]);
+  useEffect(() => { loadData(); }, [user]);
 
-  // Submit Handler for new Expenses
   const handleAddExpense = async (expenseData) => {
     if (!isMockMode) {
-      try {
-        await api.post('/expense', expenseData);
-        showToast('success', 'Expense logged successfully!');
-        loadData(); // Reload statistics
-      } catch (err) {
-        console.error(err);
-        showToast('error', 'API submission failed. Saved to local mock db.');
-        saveLocal(expenseData);
-      }
-    } else {
-      saveLocal(expenseData);
+      try { await api.post('/expense', expenseData); showToast('success', 'Expense logged successfully!'); loadData(); return; }
+      catch { showToast('error', 'API failed. Saved locally.'); }
     }
+    saveLocal(expenseData);
   };
 
   const saveLocal = (expenseData) => {
-    const newTx = {
-      id: `tx_local_${Date.now()}`,
-      type: 'expense',
-      amount: expenseData.amount,
-      category: expenseData.category,
-      paymentMethod: expenseData.paymentMethod,
-      merchant: expenseData.merchant,
-      description: expenseData.description,
-      date: expenseData.date,
-    };
-
+    const newTx = { id: `tx_local_${Date.now()}`, type: 'expense', ...expenseData };
     const updated = [newTx, ...expenses];
     setExpenses(updated);
     localStorage.setItem('local_expenses', JSON.stringify(updated));
-
-    // Recalculate budgets spent locally for high-fidelity responses
     const updatedBudgets = budgetStatus.budgets.map(b => {
       if (b.category === expenseData.category) {
         const spent = b.spent + expenseData.amount;
         const percentage = Math.round((spent / b.limit) * 100);
-        return {
-          ...b,
-          spent,
-          remaining: b.limit - spent,
-          percentage,
-          status: percentage >= 100 ? 'Exceeded' : percentage >= 80 ? 'Warning' : 'On Track'
-        };
+        return { ...b, spent, remaining: b.limit - spent, percentage, status: percentage >= 100 ? 'Exceeded' : percentage >= 80 ? 'Warning' : 'On Track' };
       }
       return b;
     });
-
     const totalSpent = updatedBudgets.reduce((sum, b) => sum + b.spent, 0);
     const totalBudget = updatedBudgets.reduce((sum, b) => sum + b.limit, 0);
-
-    setBudgetStatus({
-      budgets: updatedBudgets,
-      summary: {
-        totalBudget,
-        totalSpent,
-        totalRemaining: totalBudget - totalSpent,
-        overallPercentage: Math.round((totalSpent / totalBudget) * 100),
-      }
-    });
-
-    // Update active month trend point
-    const updatedTrends = trends.map(t => {
-      if (t.name === 'Jul') {
-        return { ...t, expense: t.expense + expenseData.amount };
-      }
-      return t;
-    });
-    setTrends(updatedTrends);
-
-    showToast('success', 'Expense saved in offline mock database!');
+    setBudgetStatus({ budgets: updatedBudgets, summary: { totalBudget, totalSpent, totalRemaining: totalBudget - totalSpent, overallPercentage: Math.round((totalSpent / totalBudget) * 100) } });
+    setTrends(trends.map(t => t.name === 'Jul' ? { ...t, expense: t.expense + expenseData.amount } : t));
+    showToast('success', 'Expense saved offline!');
   };
 
-  if (loading) {
-    return (
-      <div className="page-body" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', gap: '16px' }}>
-        <div className="avatar" style={{ width: '60px', height: '60px', fontSize: '2rem', animation: 'pulse 1.5s infinite ease-in-out', background: 'var(--orange)' }}>💳</div>
-        <h3>Loading expense ledger...</h3>
-        <p style={{ color: 'var(--text-secondary)' }}>Gathering category distributions</p>
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="page-body exp-page-loading">
+      <div className="exp-loader">💳</div>
+      <h3>Loading expense data...</h3>
+      <p>Analyzing spending patterns</p>
+    </div>
+  );
 
   return (
     <div className="page-body expense-page">
-      {/* Toast Alert */}
-      {toast && (
-        <div className={`toast ${toast.type}`}>
-          {toast.type === 'success' ? '✓' : '✕'} {toast.message}
-        </div>
-      )}
+      {toast && <div className={`toast ${toast.type}`}>{toast.type === 'success' ? '✓' : '✕'} {toast.message}</div>}
 
-      {/* Header section */}
-      <div className="expense-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-        <div>
+      {/* ===== HEADER SECTION ===== */}
+      <div className="exp-hero">
+        <div className="exp-hero-content">
           <h1>Control Your Spending</h1>
           <p>Record categories, compare budget thresholds, and inspect daily spending densities.</p>
         </div>
-        {isMockMode && (
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: 'rgba(249, 115, 22, 0.1)', border: '1px solid var(--orange)', color: 'var(--orange)', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 600 }}>
-            <span>⚡ Offline mock mode active</span>
-          </div>
-        )}
+        <div className="exp-hero-right">
+          {isMockMode && <span className="exp-mode-badge">⚡ Offline Mode</span>}
+        </div>
       </div>
 
-      {/* 3.1 Expense Dashboard Summary Cards */}
+      {/* ===== SUMMARY CARDS ===== */}
       <ExpenseCards expenses={expenses} budgetStatus={budgetStatus} />
 
-      {/* Form & Categories Split */}
-      <div className="expense-form-grid">
-        <ExpenseForm onSubmit={handleAddExpense} onToast={showToast} />
-        <ExpenseCategories />
-      </div>
+      {/* ===== TABBED SECTION: Form / Categories ===== */}
+      <section className="exp-tabbed-section">
+        <div className="exp-tab-bar">
+          <button className={`exp-tab ${activeSection === 'form' ? 'active' : ''}`} onClick={() => setActiveSection('form')}>
+            🧾 Record Expense
+          </button>
+          <button className={`exp-tab ${activeSection === 'categories' ? 'active' : ''}`} onClick={() => setActiveSection('categories')}>
+            📂 Categories
+          </button>
+        </div>
+        <div className="exp-tab-content">
+          <div className="exp-tab-panel" style={{ display: activeSection === 'form' ? 'block' : 'none' }}>
+            <ExpenseForm onSubmit={handleAddExpense} onToast={showToast} />
+          </div>
+          <div className="exp-tab-panel" style={{ display: activeSection === 'categories' ? 'block' : 'none' }}>
+            <ExpenseCategories />
+          </div>
+        </div>
+      </section>
 
-      {/* 3.4 Expense Analytics Section */}
-      <section className="card" style={{ padding: '24px' }}>
-        <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '24px' }}>Visual Analytics & Threshold Comparisons</h3>
+      {/* ===== ANALYTICS CHARTS ===== */}
+      <section className="exp-analytics">
+        <div className="exp-analytics-header">
+          <h2>Visual Analytics</h2>
+          <p>Threshold comparisons & spending density maps</p>
+        </div>
         <ExpenseCharts expenses={expenses} budgetStatus={budgetStatus} trends={trends} />
       </section>
     </div>
