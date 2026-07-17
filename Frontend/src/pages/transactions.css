@@ -101,3 +101,52 @@
   .tx-filter-group { width: 100%; }
   .tx-filter-group input, .tx-filter-group select { width: 100%; min-width: auto; }
 }
+
+/* === TRANSACTIONS — Interactive Effects === */
+
+/* Total badges hover */
+.tx-total-badge { transition: all 0.2s; cursor: default; }
+.tx-total-badge:hover { transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+/* Filter card */
+.tx-filters-card { transition: box-shadow 0.25s; }
+.tx-filters-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
+
+/* Filter inputs */
+.tx-filter-group input, .tx-filter-group select { transition: all 0.2s; }
+.tx-filter-group input:focus, .tx-filter-group select:focus { transform: scale(1.02); box-shadow: 0 0 0 3px rgba(0,122,255,0.08); }
+
+/* Table sortable header */
+.tx-th-sortable { transition: color 0.15s; position: relative; }
+.tx-th-sortable:hover { color: var(--blue); }
+.tx-th-sortable::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: var(--blue); transition: width 0.2s; }
+.tx-th-sortable:hover::after { width: 100%; }
+
+/* Table row effects */
+.tx-table tbody tr { transition: all 0.2s; }
+.tx-table tbody tr:hover { background: var(--bg); transform: scale(1.003); }
+.tx-table tbody tr:active { transform: scale(0.998); }
+
+/* Type badge */
+.tx-type-badge { transition: transform 0.2s; }
+.tx-type-badge:hover { transform: scale(1.1); }
+
+/* Status badge */
+.tx-status { transition: all 0.2s; cursor: default; }
+.tx-status:hover { transform: scale(1.1); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+/* Category text */
+.tx-cat { transition: transform 0.15s; }
+.tx-cat:hover { transform: translateX(3px); }
+
+/* Pagination buttons */
+.tx-page-btns button { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.tx-page-btns button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.06); }
+.tx-page-btns button:active:not(:disabled) { transform: translateY(0) scale(0.94); }
+.tx-page-btns button.active { animation: pageActive 0.3s ease; }
+@keyframes pageActive { from { transform: scale(0.8); } to { transform: scale(1); } }
+
+/* Amount column glow */
+.tx-td-amount { transition: text-shadow 0.2s; }
+.tx-td-amount.income:hover { text-shadow: 0 0 8px rgba(52,199,89,0.3); }
+.tx-td-amount.expense:hover { text-shadow: 0 0 8px rgba(255,59,48,0.3); }

@@ -162,3 +162,51 @@
   .inc-header-stats { width: 100%; justify-content: space-between; }
   .inc-stat-value { font-size: 1.1rem; }
 }
+
+/* === INCOME PAGE — Interactive Hover Effects === */
+
+/* Header stats pulse on hover */
+.inc-stat { transition: transform 0.2s; cursor: default; }
+.inc-stat:hover { transform: scale(1.08); }
+
+/* Form card inner glow */
+.inc-form-card { transition: all 0.25s; }
+.inc-form-card:hover { box-shadow: 0 8px 28px rgba(5,150,105,0.06); }
+
+/* Chart card hover */
+.inc-chart-card { transition: all 0.25s; }
+.inc-chart-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.06); }
+
+/* Trend card */
+.inc-trend-card { transition: all 0.25s; }
+.inc-trend-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.06); }
+
+/* Legend items */
+.inc-legend-item { transition: all 0.15s; cursor: default; }
+.inc-legend-item:hover { transform: translateX(4px); background: var(--green-light); }
+
+/* Submit button pulse ring */
+.inc-submit-btn { position: relative; }
+.inc-submit-btn::before {
+  content: ''; position: absolute; inset: -3px; border-radius: inherit;
+  background: linear-gradient(135deg, #059669, #34c759); opacity: 0;
+  z-index: -1; filter: blur(8px); transition: opacity 0.3s;
+}
+.inc-submit-btn:hover::before { opacity: 0.4; }
+
+/* Table row slide */
+.inc-table tbody tr { transition: all 0.2s; }
+.inc-table tbody tr:hover { transform: translateX(4px); background: var(--green-light); }
+.inc-table tbody tr:active { transform: translateX(2px) scale(0.99); }
+
+/* Delete button */
+.inc-del-btn { transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.inc-del-btn:hover { transform: scale(1.2) rotate(90deg); }
+
+/* Source badge hover */
+.inc-source-badge { transition: all 0.2s; cursor: default; }
+.inc-source-badge:hover { transform: scale(1.1); box-shadow: 0 2px 8px rgba(52,199,89,0.2); }
+
+/* History card header count badge */
+.inc-history-count { transition: all 0.2s; }
+.inc-history-count:hover { background: var(--green-light); color: var(--green); }
