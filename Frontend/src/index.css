@@ -304,3 +304,16 @@ tr:hover { background: var(--surface-hover); }
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: var(--radius-full); }
+
+/* === Additional Sidebar Styles === */
+.sidebar-section-label {
+  font-size: 0.65rem; font-weight: 700; color: #555;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  padding: 16px 14px 6px; margin-top: 4px;
+}
+.sidebar-nav .nav-label { flex: 1; }
+.sidebar-footer .user-details { flex: 1; min-width: 0; }
+.sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 99; }
+
+/* Auth extra */
+.auth-brand .auth-tagline { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
