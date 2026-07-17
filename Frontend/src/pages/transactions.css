@@ -1,0 +1,152 @@
+/* === TRANSACTIONS PAGE === */
+.tx-page { display: flex; flex-direction: column; gap: 22px; }
+.tx-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 14px; }
+.tx-loading-icon { font-size: 3rem; animation: pulse 1.5s infinite; }
+.tx-loading p { color: var(--text-muted); }
+
+/* Header */
+.tx-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.tx-header h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; }
+.tx-header p { color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px; }
+.tx-header-totals { display: flex; gap: 10px; }
+.tx-total-badge {
+  padding: 8px 16px; border-radius: var(--radius-full); font-size: 0.82rem;
+  font-weight: 700; display: flex; align-items: center; gap: 4px;
+}
+.tx-total-badge.income { background: var(--green-light); color: var(--green); }
+.tx-total-badge.expense { background: var(--red-light); color: var(--red); }
+.tx-total-badge.net { background: var(--blue-light); color: var(--blue); }
+
+/* Filters */
+.tx-filters-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+}
+.tx-filters { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+.tx-filter-group { display: flex; flex-direction: column; gap: 4px; }
+.tx-filter-group label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.tx-filter-group input, .tx-filter-group select {
+  padding: 9px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg); font-size: 0.85rem; color: var(--text); min-width: 120px;
+}
+.tx-filter-group input:focus, .tx-filter-group select:focus { border-color: var(--blue); outline: none; }
+.tx-filter-search { flex: 1; min-width: 180px; }
+.tx-filter-search input { width: 100%; }
+
+/* Table */
+.tx-table-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+}
+.tx-table-wrap { overflow-x: auto; }
+.tx-table { width: 100%; border-collapse: collapse; }
+.tx-table thead th {
+  text-align: left; padding: 16px 16px; font-size: 0.72rem; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em;
+  border-bottom: 2px solid var(--border); background: var(--bg);
+}
+.tx-th-sortable { cursor: pointer; user-select: none; }
+.tx-th-sortable:hover { color: var(--text); }
+.tx-table tbody tr { transition: background 0.15s; }
+.tx-table tbody tr:hover { background: var(--bg); }
+.tx-table tbody td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 0.88rem; vertical-align: middle; }
+
+.tx-td-date { color: var(--text-secondary); font-size: 0.82rem; white-space: nowrap; font-weight: 500; }
+.tx-td-desc { color: var(--text-secondary); max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tx-td-method { color: var(--text-muted); font-size: 0.82rem; }
+.tx-td-amount { font-weight: 800; white-space: nowrap; font-size: 0.95rem; }
+.tx-td-amount.income { color: var(--green); }
+.tx-td-amount.expense { color: var(--red); }
+
+.tx-type-badge {
+  display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+  border-radius: var(--radius-full); font-size: 0.7rem; font-weight: 650;
+}
+.tx-type-badge.income { background: var(--green-light); color: var(--green); }
+.tx-type-badge.expense { background: var(--red-light); color: var(--red); }
+
+.tx-cat { display: flex; align-items: center; gap: 6px; font-weight: 550; font-size: 0.85rem; }
+
+.tx-status {
+  display: inline-block; padding: 4px 10px; border-radius: var(--radius-full);
+  font-size: 0.7rem; font-weight: 600;
+}
+.tx-status.completed { background: var(--green-light); color: var(--green); }
+.tx-status.pending { background: var(--orange-light); color: var(--orange); }
+.tx-status.cancelled { background: var(--red-light); color: var(--red); }
+
+/* Pagination */
+.tx-pagination {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; border-top: 1px solid var(--border);
+}
+.tx-page-info { font-size: 0.8rem; color: var(--text-muted); }
+.tx-page-btns { display: flex; gap: 6px; align-items: center; }
+.tx-page-btns button {
+  padding: 7px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text); font-size: 0.78rem; font-weight: 550;
+  cursor: pointer; transition: all 0.15s;
+}
+.tx-page-btns button:hover:not(:disabled) { background: var(--bg); border-color: var(--blue); }
+.tx-page-btns button.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+.tx-page-btns button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tx-header { flex-direction: column; align-items: flex-start; }
+  .tx-header-totals { width: 100%; }
+  .tx-filters { flex-direction: column; }
+  .tx-filter-group { width: 100%; }
+  .tx-filter-group input, .tx-filter-group select { width: 100%; min-width: auto; }
+}
+
+/* === TRANSACTIONS — Interactive Effects === */
+
+/* Total badges hover */
+.tx-total-badge { transition: all 0.2s; cursor: default; }
+.tx-total-badge:hover { transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+/* Filter card */
+.tx-filters-card { transition: box-shadow 0.25s; }
+.tx-filters-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
+
+/* Filter inputs */
+.tx-filter-group input, .tx-filter-group select { transition: all 0.2s; }
+.tx-filter-group input:focus, .tx-filter-group select:focus { transform: scale(1.02); box-shadow: 0 0 0 3px rgba(0,122,255,0.08); }
+
+/* Table sortable header */
+.tx-th-sortable { transition: color 0.15s; position: relative; }
+.tx-th-sortable:hover { color: var(--blue); }
+.tx-th-sortable::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background: var(--blue); transition: width 0.2s; }
+.tx-th-sortable:hover::after { width: 100%; }
+
+/* Table row effects */
+.tx-table tbody tr { transition: all 0.2s; }
+.tx-table tbody tr:hover { background: var(--bg); transform: scale(1.003); }
+.tx-table tbody tr:active { transform: scale(0.998); }
+
+/* Type badge */
+.tx-type-badge { transition: transform 0.2s; }
+.tx-type-badge:hover { transform: scale(1.1); }
+
+/* Status badge */
+.tx-status { transition: all 0.2s; cursor: default; }
+.tx-status:hover { transform: scale(1.1); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+/* Category text */
+.tx-cat { transition: transform 0.15s; }
+.tx-cat:hover { transform: translateX(3px); }
+
+/* Pagination buttons */
+.tx-page-btns button { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.tx-page-btns button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.06); }
+.tx-page-btns button:active:not(:disabled) { transform: translateY(0) scale(0.94); }
+.tx-page-btns button.active { animation: pageActive 0.3s ease; }
+@keyframes pageActive { from { transform: scale(0.8); } to { transform: scale(1); } }
+
+/* Amount column glow */
+.tx-td-amount { transition: text-shadow 0.2s; }
+.tx-td-amount.income:hover { text-shadow: 0 0 8px rgba(52,199,89,0.3); }
+.tx-td-amount.expense:hover { text-shadow: 0 0 8px rgba(255,59,48,0.3); }

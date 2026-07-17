@@ -29,9 +29,12 @@ export default function Register() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="card">
-          <div className="auth-brand"><h1>Expense <span>Meter</span></h1></div>
+          <div className="auth-brand">
+            <h1>Expense<span>Meter</span></h1>
+            <p className="auth-tagline">Start your financial journey today</p>
+          </div>
           <h2>Create Account</h2>
-          <p className="auth-subtitle">Start tracking your finances</p>
+          <p className="auth-subtitle">Fill in your details to get started</p>
           {error && <div className="auth-error">{error}</div>}
           {success && <div className="auth-error" style={{ background: 'var(--green-light)', color: 'var(--green)' }}>Account created! Redirecting...</div>}
           <form onSubmit={handleSubmit}>
@@ -40,14 +43,16 @@ export default function Register() {
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="John Doe" required />
             </div>
             <div className="form-group">
-              <label>Email</label>
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="john@example.com" required />
+              <label>Email Address</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" required />
             </div>
             <div className="form-group">
               <label>Password</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 6 characters" minLength={6} required />
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Minimum 6 characters" minLength={6} required />
             </div>
-            <button className="btn btn-primary" type="submit" disabled={loading}>{loading ? 'Creating account...' : 'Create Account'}</button>
+            <button className="btn btn-primary" type="submit" disabled={loading}>
+              {loading ? 'Creating...' : 'Create Account →'}
+            </button>
           </form>
           <div className="auth-footer">
             Already have an account? <Link to="/login" className="auth-link">Sign in</Link>
