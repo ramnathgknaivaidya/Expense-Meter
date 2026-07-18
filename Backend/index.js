@@ -10,6 +10,7 @@ import transactionRoutes from './src/routes/transactionRoutes.js'
 import analyticsRoutes from './src/routes/analyticsRoutes.js'
 import budgetRoutes from './src/routes/budgetRoutes.js'
 import reportRoutes from './src/routes/reportRoutes.js'
+import savingsGoalRoutes from './src/routes/savingsGoalRoutes.js'
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api', analyticsRoutes);
 app.use('/api/budget', budgetRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/savings-goals', savingsGoalRoutes);
 
 import { protect } from './src/middlewares/authMiddleware.js';
 

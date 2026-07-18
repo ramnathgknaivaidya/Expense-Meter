@@ -48,6 +48,13 @@ export const budgetAPI = {
   delete: (id) => api.delete(`/budget/${id}`),
 };
 
+export const savingsGoalAPI = {
+  getAll: (params) => api.get('/savings-goals', { params }),
+  create: (data) => api.post('/savings-goals', data),
+  update: (id, data) => api.put(`/savings-goals/${id}`, data),
+  delete: (id) => api.delete(`/savings-goals/${id}`),
+};
+
 export const reportAPI = {
   getDashboard: () => api.get('/reports/dashboard'),
   getIncomeAnalytics: () => api.get('/reports/analytics/income'),

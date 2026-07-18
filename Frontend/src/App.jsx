@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
@@ -9,9 +10,17 @@ import Budget from './pages/Budget';
 import Profile from './pages/Profile';
 
 function AppLayout() {
+  const [collapsed, setCollapsed] = useState(() => {
+    return localStorage.getItem('sidebar-collapsed') === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('sidebar-collapsed', collapsed);
+  }, [collapsed]);
+
   return (
-    <div className="app-layout">
-      <Sidebar />
+    <div className={`app-layout ${collapsed ? 'sidebar-collapsed' : ''}`}>
+      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Dashboard />} />
