@@ -6,6 +6,7 @@ import ExpenseCategories from '../components/expense/expenseCategories';
 import ExpenseForm from '../components/expense/expenseForm';
 import ExpenseCharts from '../components/expense/expenseCharts';
 import '../components/expense/expense.css';
+import { IconCard, IconBolt, IconCheck, IconClose, IconTarget } from '../utils/icons';
 
 // Formatted Mock data (mirrors seed data)
 const MOCK_EXPENSES = [
@@ -76,7 +77,7 @@ export default function Expense() {
       setTrends(MOCK_TRENDS);
       setIsMockMode(false);
     } catch (error) {
-      console.warn('⚠️ Server connection offline, setting up Mock Storage Mode.');
+      console.warn('[Warning] Server connection offline, setting up Mock Storage Mode.');
       // Look up local storage first for mockup updates
       const local = localStorage.getItem('local_expenses');
       if (local) {
@@ -174,7 +175,7 @@ export default function Expense() {
   if (loading) {
     return (
       <div className="page-body" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', gap: '16px' }}>
-        <div className="avatar" style={{ width: '60px', height: '60px', fontSize: '2rem', animation: 'pulse 1.5s infinite ease-in-out', background: 'var(--orange)' }}>💳</div>
+        <div className="avatar" style={{ width: '60px', height: '60px', fontSize: '2rem', animation: 'pulse 1.5s infinite ease-in-out', background: 'var(--orange)' }}><IconCard size={40} /></div>
         <h3>Loading expense ledger...</h3>
         <p style={{ color: 'var(--text-secondary)' }}>Gathering category distributions</p>
       </div>
@@ -186,7 +187,7 @@ export default function Expense() {
       {/* Toast Alert */}
       {toast && (
         <div className={`toast ${toast.type}`}>
-          {toast.type === 'success' ? '✓' : '✕'} {toast.message}
+          {toast.type === 'success' ? <IconCheck size={16} /> : <IconClose size={16} />} {toast.message}
         </div>
       )}
 
@@ -198,7 +199,7 @@ export default function Expense() {
         </div>
         {isMockMode && (
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: 'rgba(249, 115, 22, 0.1)', border: '1px solid var(--orange)', color: 'var(--orange)', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 600 }}>
-            <span>⚡ Offline mock mode active</span>
+            <span><IconBolt size={14} /> Offline mock mode active</span>
           </div>
         )}
       </div>
