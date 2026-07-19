@@ -1,13 +1,14 @@
 import React from 'react';
+import { IconSalary, IconFreelance, IconBusiness, IconInvestment, IconBonus, IconRental, IconOther } from '../../utils/icons';
 
 const SOURCE_INFO = [
-  { category: 'Salary', icon: '💼', desc: 'Regular payroll deposits from your employer or primary job.' },
-  { category: 'Freelance', icon: '🧑‍💻', desc: 'Payments from gig work, contracts, or client projects.' },
-  { category: 'Business', icon: '🏢', desc: 'Revenue from side ventures, product sales, or consulting services.' },
-  { category: 'Investment', icon: '📈', desc: 'Dividends, stock returns, mutual fund payouts, and passive gains.' },
-  { category: 'Bonus', icon: '🎁', desc: 'One-time incentive payouts and performance-based rewards.' },
-  { category: 'Rental', icon: '🏘️', desc: 'Income from property rentals, leases, or sublets.' },
-  { category: 'Other', icon: '✨', desc: 'Miscellaneous income that does not fit the standard categories.' },
+  { category: 'Salary', icon: <IconSalary size={14} />, desc: 'Regular payroll deposits from your employer or primary job.' },
+  { category: 'Freelance', icon: <IconFreelance size={14} />, desc: 'Payments from gig work, contracts, or client projects.' },
+  { category: 'Business', icon: <IconBusiness size={14} />, desc: 'Revenue from side ventures, product sales, or consulting services.' },
+  { category: 'Investment', icon: <IconInvestment size={14} />, desc: 'Dividends, stock returns, mutual fund payouts, and passive gains.' },
+  { category: 'Bonus', icon: <IconBonus size={14} />, desc: 'One-time incentive payouts and performance-based rewards.' },
+  { category: 'Rental', icon: <IconRental size={14} />, desc: 'Income from property rentals, leases, or sublets.' },
+  { category: 'Other', icon: <IconOther size={14} />, desc: 'Miscellaneous income that does not fit the standard categories.' },
 ];
 
 export default function IncomeCategories() {
