@@ -1,13 +1,34 @@
-import { useState, useMemo, useCallback } from 'react'
-import { mockTransactions, getDateRange } from '../lib/transactions'
+import { useState, useMemo, useCallback, useEffect } from 'react'
+import { transactionAPI } from '../api/client'
+import { getDateRange } from '../lib/transactions'
 
 export function useTransactions() {
-  const [transactions, setTransactions] = useState(mockTransactions)
+  const [transactions, setTransactions] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
   const [filters, setFilters] = useState({
     searchQuery: '',
     dateRange: 'this_month',
     sortBy: 'newest',
   })
+
+  const loadTransactions = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await transactionAPI.getAll()
+      setTransactions(res.data.results || [])
+    } catch (err) {
+      setError('Failed to load transactions')
+      setTransactions([])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadTransactions()
+  }, [loadTransactions])
 
   const filteredTransactions = useMemo(() => {
     let filtered = [...transactions]
@@ -15,10 +36,9 @@ export function useTransactions() {
     if (filters.searchQuery) {
       const q = filters.searchQuery.toLowerCase()
       filtered = filtered.filter(t =>
-        t.title.toLowerCase().includes(q) ||
-        t.merchant.toLowerCase().includes(q) ||
-        t.description.toLowerCase().includes(q) ||
-        t.category.toLowerCase().includes(q) ||
+        (t.category || '').toLowerCase().includes(q) ||
+        (t.merchantOrSource || '').toLowerCase().includes(q) ||
+        (t.description || '').toLowerCase().includes(q) ||
         t.amount.toString().includes(q)
       )
     }
@@ -29,9 +49,9 @@ export function useTransactions() {
       return d >= start && d <= end
     })
 
-    if (filters.type) filtered = filtered.filter(t => t.type === filters.type)
-    if (filters.category) filtered = filtered.filter(t => t.category === filters.category)
-    if (filters.paymentMethod) filtered = filtered.filter(t => t.paymentMethod === filters.paymentMethod)
+    if (filters.type) filtered = filtered.filter(t => t.type.toLowerCase() === filters.type)
+    if (filters.category) filtered = filtered.filter(t => t.category.toLowerCase() === filters.category)
+    if (filters.paymentMethod) filtered = filtered.filter(t => (t.paymentMethod || '').toLowerCase() === filters.paymentMethod)
     if (filters.minAmount !== undefined) filtered = filtered.filter(t => t.amount >= filters.minAmount)
     if (filters.maxAmount !== undefined) filtered = filtered.filter(t => t.amount <= filters.maxAmount)
 
@@ -41,10 +61,10 @@ export function useTransactions() {
         case 'oldest': return new Date(a.date) - new Date(b.date)
         case 'highest_amount': return b.amount - a.amount
         case 'lowest_amount': return a.amount - b.amount
-        case 'category_az': return a.category.localeCompare(b.category)
-        case 'category_za': return b.category.localeCompare(a.category)
-        case 'merchant': return a.merchant.localeCompare(b.merchant)
-        case 'newest_edited': return new Date(b.updatedAt) - new Date(a.updatedAt)
+        case 'category_az': return (a.category || '').localeCompare(b.category || '')
+        case 'category_za': return (b.category || '').localeCompare(a.category || '')
+        case 'merchant': return (a.merchantOrSource || '').localeCompare(b.merchantOrSource || '')
+        case 'newest_edited': return new Date(b.updatedAt || b.date) - new Date(a.updatedAt || a.date)
         default: return 0
       }
     })
@@ -69,46 +89,13 @@ export function useTransactions() {
     }
   }, [filteredTransactions])
 
-  const addTransaction = useCallback((transaction) => {
-    setTransactions(prev => [{
-      ...transaction,
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    }, ...prev])
-  }, [])
-
-  const updateTransaction = useCallback((id, updates) => {
-    setTransactions(prev => prev.map(t =>
-      t.id === id ? { ...t, ...updates, updatedAt: new Date() } : t
-    ))
-  }, [])
-
-  const deleteTransaction = useCallback((id) => {
-    setTransactions(prev => prev.filter(t => t.id !== id))
-  }, [])
-
-  const duplicateTransaction = useCallback((id) => {
-    const original = transactions.find(t => t.id === id)
-    if (original) {
-      setTransactions(prev => [{
-        ...original,
-        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        date: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }, ...prev])
-    }
-  }, [transactions])
-
   return {
     transactions: filteredTransactions,
     summary,
+    loading,
+    error,
     filters,
     setFilters,
-    addTransaction,
-    updateTransaction,
-    deleteTransaction,
-    duplicateTransaction,
+    refresh: loadTransactions,
   }
 }
