@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconChartDown, IconTarget, IconCalendar, IconCrown } from '../../utils/icons';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('en-IN', {
@@ -50,7 +51,7 @@ export default function ExpenseCards({ expenses = [], budgetStatus = null }) {
       title: 'Total Expense',
       value: formatCurrency(totalExpense),
       desc: `${currentMonthExpenses.length} transactions this month`,
-      icon: '📉',
+      icon: <IconChartDown size={20} />,
       color: 'var(--red)',
       bgIcon: 'var(--red-light)',
     },
@@ -60,7 +61,7 @@ export default function ExpenseCards({ expenses = [], budgetStatus = null }) {
       desc: totalBudget > 0 
         ? `${formatCurrency(remainingBudget)} of ${formatCurrency(totalBudget)} remaining`
         : 'Setup budgets in target tab',
-      icon: '🎯',
+      icon: <IconTarget size={20} />,
       color: remainingBudget < 0 ? 'var(--red)' : remainingBudget < totalBudget * 0.15 ? 'var(--orange)' : 'var(--blue)',
       bgIcon: remainingBudget < 0 ? 'var(--red-light)' : remainingBudget < totalBudget * 0.15 ? 'var(--orange-light)' : 'var(--blue-light)',
     },
@@ -68,7 +69,7 @@ export default function ExpenseCards({ expenses = [], budgetStatus = null }) {
       title: 'Daily Average',
       value: formatCurrency(dailyAverage),
       desc: `Calculated over ${currentDay} elapsed days`,
-      icon: '📅',
+      icon: <IconCalendar size={20} />,
       color: 'var(--orange)',
       bgIcon: 'var(--orange-light)',
     },
@@ -76,7 +77,7 @@ export default function ExpenseCards({ expenses = [], budgetStatus = null }) {
       title: 'Highest Spending',
       value: highestCategory !== 'N/A' ? highestCategory : 'None',
       desc: highestAmount > 0 ? `Totaled ${formatCurrency(highestAmount)}` : 'No expenses recorded',
-      icon: '👑',
+      icon: <IconCrown size={20} />,
       color: 'var(--green)',
       bgIcon: 'var(--green-light)',
     },
