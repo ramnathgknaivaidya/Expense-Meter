@@ -23,13 +23,7 @@ export const getSavingsGoals = async (req, res) => {
 
     // Auto-seed defaults if database is empty for this user
     if (goals.length === 0) {
-      const defaultGoals = [
-        { userId: req.user._id, title: 'Emergency Fund', targetAmount: 50000, savedAmount: 15000, description: '3-6 months of living expenses' },
-        { userId: req.user._id, title: 'New Device', targetAmount: 80000, savedAmount: 24000, description: 'Next-gen laptop and phone upgrade' },
-        { userId: req.user._id, title: 'Vacation', targetAmount: 120000, savedAmount: 40000, description: 'Annual trip plan' },
-        { userId: req.user._id, title: 'Investment Goal', targetAmount: 2000000, savedAmount: 500000, description: 'Long-term equity & index funds' }
-      ];
-      goals = await SavingsGoal.insertMany(defaultGoals);
+      return res.json([]);
     }
 
     res.json(goals.map(formatGoal));
