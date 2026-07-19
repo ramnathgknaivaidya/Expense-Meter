@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { IconBank, IconUpi, IconCash, IconCard, IconDraft, IconClose } from '../../utils/icons';
 
 const SOURCE_OPTIONS = [
   'Salary',
@@ -11,10 +12,10 @@ const SOURCE_OPTIONS = [
 ];
 
 const PAYMENT_METHODS = [
-  { id: 'Bank Transfer', icon: '🏦' },
-  { id: 'UPI', icon: '📱' },
-  { id: 'Cash', icon: '💵' },
-  { id: 'Card', icon: '💳' },
+  { id: 'Bank Transfer', icon: <IconBank size={16} /> },
+  { id: 'UPI', icon: <IconUpi size={16} /> },
+  { id: 'Cash', icon: <IconCash size={16} /> },
+  { id: 'Card', icon: <IconCard size={16} /> },
 ];
 
 export default function IncomeForm({ onSubmit, onToast }) {
@@ -97,11 +98,11 @@ export default function IncomeForm({ onSubmit, onToast }) {
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {hasDraft && (
             <button type="button" className="btn btn-sm btn-outline" onClick={handleLoadDraft}>
-              📂 Load Draft
+              <IconDraft size={16} /> Load Draft
             </button>
           )}
           <button type="button" className="btn btn-sm btn-outline" onClick={handleClearForm}>
-            ✕ Cancel
+            <IconClose size={16} /> Cancel
           </button>
         </div>
       </div>
