@@ -6,8 +6,7 @@ import AnalyticsExport from "../components/analytics/analyticsExport";
 
 import "../components/analytics/analytics.css";
 
-export default function Analytics() {
-  return (
+export default function Analytics() { 
   return (
     <div className="page-body">
       <div className="analytics-page">
