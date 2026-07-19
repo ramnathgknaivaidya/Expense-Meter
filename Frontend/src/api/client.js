@@ -16,7 +16,17 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (res) => res,
-  (err) => Promise.reject(err)
+  (err) => {
+    if (err.response?.status === 401) {
+      const token = localStorage.getItem('token');
+      if (token && token.startsWith('mock_')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.reload();
+      }
+    }
+    return Promise.reject(err);
+  }
 );
 
 export const incomeAPI = {
@@ -56,10 +66,10 @@ export const savingsGoalAPI = {
 };
 
 export const reportAPI = {
-  getDashboard: () => api.get('/reports/dashboard'),
-  getIncomeAnalytics: () => api.get('/reports/analytics/income'),
-  getExpenseAnalytics: () => api.get('/reports/analytics/expense'),
-  getBudgetStatus: () => api.get('/reports/budget/status'),
+  getDashboard: () => api.get('/dashboard'),
+  getIncomeAnalytics: () => api.get('/analytics/income'),
+  getExpenseAnalytics: () => api.get('/analytics/expense'),
+  getBudgetStatus: () => api.get('/budget/status'),
   getMonthly: (params) => api.get('/reports/monthly', { params }),
   getYearly: (params) => api.get('/reports/yearly', { params }),
   getIncomeReport: (params) => api.get('/reports/income', { params }),
