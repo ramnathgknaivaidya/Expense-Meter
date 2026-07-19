@@ -11,6 +11,7 @@ const formatTransaction = (tx) => ({
   merchantOrSource: tx.merchantOrSource,
   description: tx.description,
   date: tx.date,
+  referenceId: tx.referenceId,
 });
 
 // @desc    Get all transactions (with filters)
