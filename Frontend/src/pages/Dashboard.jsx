@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/client';
+import { IconFood, IconTransport, IconHousing, IconBills, IconShopping, IconHealthcare, IconEducation, IconEntertainment, IconTravel, IconFallback, IconCash, IconUpi, IconCard, IconBank, IconWallet, IconChartUp, IconChartDown, IconPiggy, IconTarget, IconGrowth, IconCalendar, IconPin, IconCrown, IconBolt, IconCheck, IconArrowRight, IconIncome, IconExpense, IconSalary, IconFreelance, IconBusiness, IconInvestment, IconBonus, IconBarChart } from '../utils/icons';
 import {
   ResponsiveContainer,
   AreaChart,
@@ -26,30 +27,30 @@ const formatCurrency = (value) => {
 // Category Icon Mapping
 const getCategoryIcon = (category) => {
   const cat = category.toLowerCase();
-  if (cat.includes('salary') || cat.includes('job')) return '💼';
-  if (cat.includes('freelance') || cat.includes('project')) return '💻';
-  if (cat.includes('business') || cat.includes('revenue')) return '🏪';
-  if (cat.includes('invest') || cat.includes('dividend')) return '📈';
-  if (cat.includes('bonus') || cat.includes('gift')) return '🎁';
-  if (cat.includes('food') || cat.includes('eat') || cat.includes('swiggy') || cat.includes('cafe')) return '🍔';
-  if (cat.includes('transport') || cat.includes('cab') || cat.includes('uber') || cat.includes('fuel')) return '🚗';
-  if (cat.includes('housing') || cat.includes('rent') || cat.includes('landlord')) return '🏠';
-  if (cat.includes('bill') || cat.includes('electricity') || cat.includes('water')) return '💡';
-  if (cat.includes('shopping') || cat.includes('clothes') || cat.includes('amazon')) return '🛍️';
-  if (cat.includes('health') || cat.includes('medicine') || cat.includes('pharmacy')) return '🏥';
-  if (cat.includes('education') || cat.includes('course') || cat.includes('coursera')) return '🎓';
-  if (cat.includes('entertainment') || cat.includes('netflix') || cat.includes('sub')) return '🍿';
-  return '💸';
+  if (cat.includes('salary') || cat.includes('job')) return <IconSalary size={14} />;
+  if (cat.includes('freelance') || cat.includes('project')) return <IconFreelance size={14} />;
+  if (cat.includes('business') || cat.includes('revenue')) return <IconBusiness size={14} />;
+  if (cat.includes('invest') || cat.includes('dividend')) return <IconInvestment size={14} />;
+  if (cat.includes('bonus') || cat.includes('gift')) return <IconBonus size={14} />;
+  if (cat.includes('food') || cat.includes('eat') || cat.includes('swiggy') || cat.includes('cafe')) return <IconFood size={14} />;
+  if (cat.includes('transport') || cat.includes('cab') || cat.includes('uber') || cat.includes('fuel')) return <IconTransport size={14} />;
+  if (cat.includes('housing') || cat.includes('rent') || cat.includes('landlord')) return <IconHousing size={14} />;
+  if (cat.includes('bill') || cat.includes('electricity') || cat.includes('water')) return <IconBills size={14} />;
+  if (cat.includes('shopping') || cat.includes('clothes') || cat.includes('amazon')) return <IconShopping size={14} />;
+  if (cat.includes('health') || cat.includes('medicine') || cat.includes('pharmacy')) return <IconHealthcare size={14} />;
+  if (cat.includes('education') || cat.includes('course') || cat.includes('coursera')) return <IconEducation size={14} />;
+  if (cat.includes('entertainment') || cat.includes('netflix') || cat.includes('sub')) return <IconEntertainment size={14} />;
+  return <IconFallback size={14} />;
 };
 
 // Payment Method Icon Mapping
 const getPaymentMethodIcon = (method) => {
   const m = method?.toLowerCase() || '';
-  if (m.includes('cash')) return '💵';
-  if (m.includes('upi')) return '📱';
-  if (m.includes('card')) return '💳';
-  if (m.includes('bank') || m.includes('transfer')) return '🏛️';
-  return '🔌';
+  if (m.includes('cash')) return <IconCash size={14} />;
+  if (m.includes('upi')) return <IconUpi size={14} />;
+  if (m.includes('card')) return <IconCard size={14} />;
+  if (m.includes('bank') || m.includes('transfer')) return <IconBank size={14} />;
+  return <IconFallback size={14} />;
 };
 
 // High-fidelity fallback mock data when backend/db is offline or seeding is missing
@@ -208,7 +209,7 @@ export default function Dashboard() {
         });
         setIsMockMode(false);
       } catch (error) {
-        console.warn('⚠️ API connection failed, falling back to offline Mock Mode.');
+        console.warn('[Warning] API connection failed, falling back to offline Mock Mode.');
         console.error(error);
         setDashboardData(MOCK_DATA);
         setIsMockMode(true);
@@ -230,7 +231,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="page-body" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', gap: '16px' }}>
-        <div className="avatar" style={{ width: '60px', height: '60px', fontSize: '2rem', animation: 'pulse 1.5s infinite ease-in-out' }}>📊</div>
+        <div className="avatar" style={{ width: '60px', height: '60px', fontSize: '2rem', animation: 'pulse 1.5s infinite ease-in-out' }}><IconBarChart size={40} /></div>
         <h3>Loading your financial dashboard...</h3>
         <p style={{ color: 'var(--text-secondary)' }}>Compiling live ledger records</p>
       </div>
@@ -248,11 +249,11 @@ export default function Dashboard() {
         
         {isMockMode ? (
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: 'rgba(249, 115, 22, 0.1)', border: '1px solid var(--orange)', color: 'var(--orange)', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 600 }}>
-            <span>⚡ Demo Data Mode (Offline)</span>
+            <span><IconBolt size={14} /> Demo Data Mode (Offline)</span>
           </div>
         ) : (
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--green)', color: 'var(--green)', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 600 }}>
-            <span>● Live Database Sync</span>
+            <span><IconCheck size={14} /> Live Database Sync</span>
           </div>
         )}
       </div>
@@ -268,10 +269,10 @@ export default function Dashboard() {
             </p>
             <div className="hero-actions">
               <button className="btn btn-primary-hero" onClick={() => navigate('/income')}>
-                💰 Add Income
+                <IconIncome size={18} /> Add Income
               </button>
               <button className="btn" onClick={() => navigate('/expense')}>
-                💳 Add Expense
+                <IconExpense size={18} /> Add Expense
               </button>
             </div>
           </div>
@@ -282,37 +283,31 @@ export default function Dashboard() {
               
               {/* Income Node */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, textAlign: 'center' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', marginBottom: '8px' }}>💰</div>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', marginBottom: '8px' }}><IconIncome color="#10b981" /></div>
                 <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>Income</span>
                 <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#6ee7b7' }}>100%</span>
               </div>
 
-              {/* Connecting Dot Flow */}
-              <div style={{ display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold', fontSize: '1.2rem' }}>➔</div>
+              <div style={{ display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold', fontSize: '1.2rem' }}><IconArrowRight size={16} color="#008081" /></div>
 
-              {/* Expense Node */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, textAlign: 'center' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', marginBottom: '8px' }}>💸</div>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', marginBottom: '8px' }}><IconExpense color="#10b981" /></div>
                 <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>Expense</span>
                 <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#fca5a5' }}>{expenseAnalytics.spendingRate}%</span>
               </div>
 
-              {/* Connecting Dot Flow */}
-              <div style={{ display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold', fontSize: '1.2rem' }}>➔</div>
+              <div style={{ display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold', fontSize: '1.2rem' }}><IconArrowRight size={16} color="#008081" /></div>
 
-              {/* Savings Node */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, textAlign: 'center' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', marginBottom: '8px' }}>🐷</div>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', marginBottom: '8px' }}><IconTarget color="#10b981" size={18} /></div>
                 <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>Savings</span>
                 <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#93c5fd' }}>{summary.savingsRate}%</span>
               </div>
 
-              {/* Connecting Dot Flow */}
-              <div style={{ display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold', fontSize: '1.2rem' }}>➔</div>
+              <div style={{ display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.3)', fontWeight: 'bold', fontSize: '1.2rem' }}><IconArrowRight size={16} color="#008081" /></div>
 
-              {/* Growth Node */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, textAlign: 'center' }}>
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', marginBottom: '8px' }}>🚀</div>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', boxShadow: '0 4px 10px rgba(0,0,0,0.1)', marginBottom: '8px' }}><IconChartUp color="#10b981" size={18} /></div>
                 <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>Growth</span>
                 <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#fbbf24' }}>+{summary.balanceChange}%</span>
               </div>
@@ -329,7 +324,7 @@ export default function Dashboard() {
           <div>
             <div className="card-header" style={{ padding: 0, marginBottom: 0 }}>
               <span className="sc-label">TOTAL BALANCE</span>
-              <div className="sc-icon icon-blue">👛</div>
+              <div className="sc-icon icon-blue"><IconWallet size={20} /></div>
             </div>
             <h2 className="sc-value" style={{ marginTop: '8px' }}>{formatCurrency(summary.balance)}</h2>
           </div>
@@ -344,7 +339,7 @@ export default function Dashboard() {
           <div>
             <div className="card-header" style={{ padding: 0, marginBottom: 0 }}>
               <span className="sc-label">TOTAL INCOME</span>
-              <div className="sc-icon icon-green">📈</div>
+              <div className="sc-icon icon-green"><IconChartUp size={20} /></div>
             </div>
             <h2 className="sc-value" style={{ marginTop: '8px' }}>{formatCurrency(summary.totalIncome)}</h2>
           </div>
@@ -362,7 +357,7 @@ export default function Dashboard() {
           <div>
             <div className="card-header" style={{ padding: 0, marginBottom: 0 }}>
               <span className="sc-label">TOTAL EXPENDITURE</span>
-              <div className="sc-icon icon-red">📉</div>
+              <div className="sc-icon icon-red"><IconChartDown size={20} /></div>
             </div>
             <h2 className="sc-value" style={{ marginTop: '8px' }}>{formatCurrency(summary.totalExpense)}</h2>
           </div>
@@ -380,7 +375,7 @@ export default function Dashboard() {
           <div>
             <div className="card-header" style={{ padding: 0, marginBottom: 0 }}>
               <span className="sc-label">TOTAL SAVINGS</span>
-              <div className="sc-icon icon-orange">🐷</div>
+              <div className="sc-icon icon-orange"><IconPiggy size={20} /></div>
             </div>
             <h2 className="sc-value" style={{ marginTop: '8px' }}>{formatCurrency(summary.totalIncome - summary.totalExpense)}</h2>
           </div>
@@ -515,7 +510,7 @@ export default function Dashboard() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', height: '240px', overflowY: 'auto', paddingRight: '4px' }}>
                   {budgetStatus.budgets.length === 0 ? (
                     <div className="empty-state" style={{ padding: '20px' }}>
-                      <div className="empty-icon">🎯</div>
+                      <div className="empty-icon"><IconTarget size={40} /></div>
                       <p>No monthly category budgets set yet.</p>
                       <button className="btn btn-sm btn-outline" style={{ marginTop: '10px' }} onClick={() => navigate('/budget')}>Setup Budgets</button>
                     </div>
@@ -568,7 +563,7 @@ export default function Dashboard() {
         <div>
           {filteredTransactions.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-icon">💸</div>
+              <div className="empty-icon"><IconFallback size={40} /></div>
               <p>No recent {activeTab === 'income' ? 'income' : 'expense'} transactions found.</p>
             </div>
           ) : (
