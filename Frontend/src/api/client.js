@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const api = axios.create({ baseURL: '/api' });
 
-// Add request interceptor to attach JWT token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -12,21 +11,6 @@ api.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
-);
-
-api.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    if (err.response?.status === 401) {
-      const token = localStorage.getItem('token');
-      if (token && token.startsWith('mock_')) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.reload();
-      }
-    }
-    return Promise.reject(err);
-  }
 );
 
 export const incomeAPI = {
