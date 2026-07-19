@@ -6,6 +6,7 @@ import IncomeCategories from '../components/income/incomeCategories';
 import IncomeForm from '../components/income/incomeForm';
 import IncomeCharts from '../components/income/incomeCharts';
 import '../components/income/income.css';
+import { IconCard, IconBolt, IconCheck, IconClose, IconTarget } from '../utils/icons';
 
 const MOCK_INCOMES = [
   { id: 'tx_1', type: 'income', amount: 50000, source: 'Salary', paymentMethod: 'Bank Transfer', description: 'July salary credited', date: '2026-07-20T00:00:00.000Z' },
@@ -67,7 +68,7 @@ export default function Income() {
       setTrends(MOCK_TRENDS);
       setIsMockMode(false);
     } catch (error) {
-      console.warn('⚠️ Server connection offline, setting up Mock Storage Mode.');
+      console.warn('[Warning] Server connection offline, setting up Mock Storage Mode.');
       const local = localStorage.getItem('local_income');
       if (local) {
         setIncomes(JSON.parse(local));
@@ -133,7 +134,7 @@ export default function Income() {
   if (loading) {
     return (
       <div className="page-body" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', gap: '16px' }}>
-        <div className="avatar" style={{ width: '60px', height: '60px', fontSize: '2rem', animation: 'pulse 1.5s infinite ease-in-out', background: 'var(--orange)' }}>💳</div>
+        <div className="avatar" style={{ width: '60px', height: '60px', fontSize: '2rem', animation: 'pulse 1.5s infinite ease-in-out', background: 'var(--orange)' }}><IconCard size={40} /></div>
         <h3>Loading income ledger...</h3>
         <p style={{ color: 'var(--text-secondary)' }}>Gathering source and trend insights</p>
       </div>
@@ -144,7 +145,7 @@ export default function Income() {
     <div className="page-body income-page">
       {toast && (
         <div className={`toast ${toast.type}`}>
-          {toast.type === 'success' ? '✓' : '✕'} {toast.message}
+          {toast.type === 'success' ? <IconCheck size={16} /> : <IconClose size={16} />} {toast.message}
         </div>
       )}
 
@@ -155,7 +156,7 @@ export default function Income() {
         </div>
         {isMockMode && (
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: 'rgba(249, 115, 22, 0.1)', border: '1px solid var(--orange)', color: 'var(--orange)', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 600 }}>
-            <span>⚡ Offline mock mode active</span>
+            <span><IconBolt size={14} /> Offline mock mode active</span>
           </div>
         )}
       </div>
