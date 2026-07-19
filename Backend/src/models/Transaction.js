@@ -38,7 +38,7 @@ const transactionSchema = new mongoose.Schema(
     paymentMethod: {
       type: String,
       required: true,
-      enum: ['Cash', 'UPI', 'Debit Card', 'Credit Card', 'Bank Transfer'],
+      enum: ['Cash', 'UPI', 'Debit Card', 'Credit Card', 'Bank Transfer', 'Card'],
     },
     merchantOrSource: {
       type: String,
