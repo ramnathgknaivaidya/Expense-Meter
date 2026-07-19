@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { IconCash, IconUpi, IconCard, IconBank, IconDraft, IconClose, IconCamera, IconFile, IconExpense, IconBackup } from '../../utils/icons';
 
 const CATEGORIES = [
   'Food',
@@ -14,11 +15,11 @@ const CATEGORIES = [
 ];
 
 const PAYMENT_METHODS = [
-  { id: 'Cash', icon: '💵' },
-  { id: 'UPI', icon: '📱' },
-  { id: 'Debit Card', icon: '💳' },
-  { id: 'Credit Card', icon: '💳' },
-  { id: 'Bank Transfer', icon: '🏛️' }
+  { id: 'Cash', icon: <IconCash size={16} /> },
+  { id: 'UPI', icon: <IconUpi size={16} /> },
+  { id: 'Debit Card', icon: <IconCard size={16} /> },
+  { id: 'Credit Card', icon: <IconCard size={16} /> },
+  { id: 'Bank Transfer', icon: <IconBank size={16} /> }
 ];
 
 export default function ExpenseForm({ onSubmit, onToast }) {
@@ -126,7 +127,7 @@ export default function ExpenseForm({ onSubmit, onToast }) {
         {hasDraft && (
           <div style={{ display: 'flex', gap: '8px' }}>
             <button type="button" className="btn btn-sm btn-outline" onClick={handleLoadDraft}>
-              📂 Load Draft
+              <IconDraft size={16} /> Load Draft
             </button>
             <button type="button" className="btn btn-sm btn-outline" style={{ color: 'var(--red)' }} onClick={handleClearDraft}>
               ✕
@@ -222,16 +223,16 @@ export default function ExpenseForm({ onSubmit, onToast }) {
               onChange={handleFileChange}
               accept="image/*,.pdf"
             />
-            <div className="upload-icon">📸</div>
+            <div className="upload-icon"><IconCamera size={16} /></div>
             <div className="upload-text">Drag & drop receipt image or click to browse</div>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Supports JPG, PNG, PDF up to 2MB</span>
           </div>
 
           {receiptFile && (
             <div className="upload-preview">
-              <span className="upload-filename">📄 {receiptFile.name}</span>
+              <span className="upload-filename"><IconFile size={16} /> {receiptFile.name}</span>
               <button type="button" className="remove-upload" onClick={(e) => { e.stopPropagation(); setReceiptFile(null); }}>
-                ✕
+              <IconClose size={16} />
               </button>
             </div>
           )}
@@ -239,10 +240,10 @@ export default function ExpenseForm({ onSubmit, onToast }) {
 
         <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
           <button type="submit" className="btn btn-primary" style={{ flex: 1.5, background: 'var(--orange)', justifyContent: 'center' }}>
-            💳 Add Expense
+            <IconExpense size={16} /> Add Expense
           </button>
           <button type="button" className="btn btn-outline" style={{ flex: 1, justifyContent: 'center' }} onClick={handleSaveDraft}>
-            💾 Save Draft
+            <IconBackup size={16} /> Save Draft
           </button>
         </div>
       </form>
