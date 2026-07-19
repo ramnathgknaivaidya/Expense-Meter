@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/client';
 import { formatCurrency, fetchExchangeRates } from '../utils/format';
+import { IconSun, IconMoon, IconBell, IconBarChart, IconIncome, IconExport, IconBackup, IconReset, IconTrash, IconCheck, IconClose, IconTarget } from '../utils/icons';
 
 const NOTIFICATIONS_KEY = 'notification_prefs';
 
@@ -111,7 +112,7 @@ export default function Profile() {
 
   return (
     <div className="page-body">
-      {toast && <div className={`toast ${toast.type}`} style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 999 }}>{toast.type === 'success' ? '✓' : '✕'} {toast.message}</div>}
+      {toast && <div className={`toast ${toast.type}`} style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 999 }}>{toast.type === 'success' ? <IconCheck size={16} /> : <IconClose size={16} />} {toast.message}</div>}
 
       <div style={{ marginBottom: '28px' }}>
         <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Profile & Settings</h2>
@@ -155,15 +156,15 @@ export default function Profile() {
         <div className="card">
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '20px', paddingBottom: '12px', borderBottom: '1px solid var(--border)' }}>Appearance</h3>
           <div className="theme-toggle" style={{ marginBottom: '24px' }}>
-            <button className={`theme-btn ${theme === 'light' ? 'active' : ''}`} onClick={() => setTheme('light')}>☀️ Light Mode</button>
-            <button className={`theme-btn ${theme === 'dark' ? 'active' : ''}`} onClick={() => setTheme('dark')}>🌙 Dark Mode</button>
+            <button className={`theme-btn ${theme === 'light' ? 'active' : ''}`} onClick={() => setTheme('light')}><IconSun size={16} /> Light Mode</button>
+            <button className={`theme-btn ${theme === 'dark' ? 'active' : ''}`} onClick={() => setTheme('dark')}><IconMoon size={16} /> Dark Mode</button>
           </div>
 
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid var(--border)' }}>Notifications</h3>
           {[
-            { key: 'budgetAlerts', label: '🔔 Budget alerts', desc: 'Get notified when nearing budget limits' },
-            { key: 'expenseReminders', label: '📊 Expense reminders', desc: 'Daily expense logging reminders' },
-            { key: 'incomeReminders', label: '💰 Income reminders', desc: 'Reminders to log new income' },
+            { key: 'budgetAlerts', label: <><IconBell size={16} /> Budget alerts</>, desc: 'Get notified when nearing budget limits' },
+            { key: 'expenseReminders', label: <><IconBarChart size={16} /> Expense reminders</>, desc: 'Daily expense logging reminders' },
+            { key: 'incomeReminders', label: <><IconIncome size={16} /> Income reminders</>, desc: 'Reminders to log new income' },
           ].map(item => (
             <div key={item.key} className="settings-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
               <div>
@@ -192,10 +193,10 @@ export default function Profile() {
         <div className="card" style={{ gridColumn: '1 / -1' }}>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '20px', paddingBottom: '12px', borderBottom: '1px solid var(--border)' }}>Data Management</h3>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <button className="btn btn-outline" onClick={handleExportCSV}>📤 Export Data</button>
-            <button className="btn btn-outline" onClick={handleBackup}>💾 Backup Data</button>
-            <button className="btn btn-outline" onClick={handleResetData}>🔄 Reset Demo Data</button>
-            <button className="btn btn-danger" onClick={handleDeleteAccount} style={{ background: 'var(--red)', color: '#fff', border: 'none' }}>🗑️ Delete Account Data</button>
+            <button className="btn btn-outline" onClick={handleExportCSV}><IconExport size={16} /> Export Data</button>
+            <button className="btn btn-outline" onClick={handleBackup}><IconBackup size={16} /> Backup Data</button>
+            <button className="btn btn-outline" onClick={handleResetData}><IconReset size={16} /> Reset Demo Data</button>
+            <button className="btn btn-danger" onClick={handleDeleteAccount} style={{ background: 'var(--red)', color: '#fff', border: 'none' }}><IconTrash size={16} /> Delete Account Data</button>
           </div>
         </div>
       </div>
