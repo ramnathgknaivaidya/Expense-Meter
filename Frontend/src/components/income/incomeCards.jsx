@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconWallet, IconTarget, IconCalendar, IconPin } from '../../utils/icons';
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat('en-IN', {
@@ -45,7 +46,7 @@ export default function IncomeCards({ income = [], budgetStatus = null }) {
       title: 'Total Income',
       value: formatCurrency(totalIncome),
       desc: `${currentMonthIncome.length} transactions this month`,
-      icon: '💰',
+      icon: <IconWallet size={20} />,
       color: 'var(--green)',
       bgIcon: 'var(--green-light)',
     },
@@ -55,7 +56,7 @@ export default function IncomeCards({ income = [], budgetStatus = null }) {
       desc: totalBudget > 0
         ? `${formatCurrency(remainingBudget)} remaining`
         : 'Set monthly targets for better planning',
-      icon: '🎯',
+      icon: <IconTarget size={20} />,
       color: remainingBudget < totalBudget * 0.15 ? 'var(--orange)' : 'var(--blue)',
       bgIcon: remainingBudget < totalBudget * 0.15 ? 'var(--orange-light)' : 'var(--blue-light)',
     },
@@ -63,7 +64,7 @@ export default function IncomeCards({ income = [], budgetStatus = null }) {
       title: 'Average Daily',
       value: formatCurrency(dailyAverage),
       desc: `Based on ${currentDay} days`,
-      icon: '📅',
+      icon: <IconCalendar size={20} />,
       color: 'var(--orange)',
       bgIcon: 'var(--orange-light)',
     },
@@ -71,7 +72,7 @@ export default function IncomeCards({ income = [], budgetStatus = null }) {
       title: 'Primary Source',
       value: topSource !== 'N/A' ? topSource : 'None',
       desc: topSourceAmount > 0 ? `₹${topSourceAmount} this month` : 'No records yet',
-      icon: '📌',
+      icon: <IconPin size={20} />,
       color: 'var(--blue)',
       bgIcon: 'var(--blue-light)',
     },
