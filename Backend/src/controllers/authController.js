@@ -49,6 +49,7 @@ export const register = async (req, res) => {
     });
   } catch (error) {
     console.error('Register Error:', error.message);
+    console.error(error.stack);
     res.status(500).json({
       error: 'Server error, please try again later',
     });
@@ -104,5 +105,36 @@ export const login = async (req, res) => {
     res.status(500).json({
       error: 'Server error, please try again later',
     });
+  }
+};
+
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+export const updateProfile = async (req, res) => {
+  try {
+    const { name, email, currency, profileImage } = req.body;
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    if (name !== undefined) user.name = name;
+    if (email !== undefined) user.email = email;
+    if (currency !== undefined) user.currency = currency;
+    if (profileImage !== undefined) user.profileImage = profileImage;
+    await user.save();
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      currency: user.currency,
+      profileImage: user.profileImage,
+    });
+  } catch (error) {
+    console.error('Update Profile Error:', error.message);
+    if (error.code === 11000) {
+      return res.status(409).json({ error: 'Email already in use' });
+    }
+    res.status(500).json({ error: 'Server error, please try again later' });
   }
 };
