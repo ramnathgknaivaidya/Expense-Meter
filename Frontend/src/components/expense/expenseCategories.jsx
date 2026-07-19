@@ -1,16 +1,17 @@
 import React from 'react';
+import { IconFood, IconTransport, IconHousing, IconBills, IconShopping, IconHealthcare, IconEducation, IconEntertainment, IconTravel, IconFallback } from '../../utils/icons';
 
 const CATEGORY_INFO = [
-  { category: 'Food', icon: '🍔', desc: 'Restaurants, dining out, groceries, delivery, and snacks.' },
-  { category: 'Transport', icon: '🚗', desc: 'Fuel refills, cabs, ride-hailing services, and transit passes.' },
-  { category: 'Housing', icon: '🏠', desc: 'Rent fees, property tax, maintenance fees, and home utility fixes.' },
-  { category: 'Bills', icon: '💡', desc: 'Electricity, fiber broadband, mobile bills, and software subscriptions.' },
-  { category: 'Shopping', icon: '🛍️', desc: 'Clothing, shoes, gadgets, and personal care accessories.' },
-  { category: 'Healthcare', icon: '🏥', desc: 'Medicine, health checkups, clinics, dental, and medical insurance.' },
-  { category: 'Education', icon: '🎓', desc: 'Online coding courses, university books, and learning resources.' },
-  { category: 'Entertainment', icon: '🍿', desc: 'Movie tickets, games, console credits, events, and parties.' },
-  { category: 'Travel', icon: '✈️', desc: 'Flights, train booking, hotel lodging, trips, and vacations.' },
-  { category: 'Other', icon: '💸', desc: 'Miscellaneous expenses, emergency fees, or cash withdrawals.' }
+  { category: 'Food', icon: <IconFood size={14} />, desc: 'Restaurants, dining out, groceries, delivery, and snacks.' },
+  { category: 'Transport', icon: <IconTransport size={14} />, desc: 'Fuel refills, cabs, ride-hailing services, and transit passes.' },
+  { category: 'Housing', icon: <IconHousing size={14} />, desc: 'Rent fees, property tax, maintenance fees, and home utility fixes.' },
+  { category: 'Bills', icon: <IconBills size={14} />, desc: 'Electricity, fiber broadband, mobile bills, and software subscriptions.' },
+  { category: 'Shopping', icon: <IconShopping size={14} />, desc: 'Clothing, shoes, gadgets, and personal care accessories.' },
+  { category: 'Healthcare', icon: <IconHealthcare size={14} />, desc: 'Medicine, health checkups, clinics, dental, and medical insurance.' },
+  { category: 'Education', icon: <IconEducation size={14} />, desc: 'Online coding courses, university books, and learning resources.' },
+  { category: 'Entertainment', icon: <IconEntertainment size={14} />, desc: 'Movie tickets, games, console credits, events, and parties.' },
+  { category: 'Travel', icon: <IconTravel size={14} />, desc: 'Flights, train booking, hotel lodging, trips, and vacations.' },
+  { category: 'Other', icon: <IconFallback size={14} />, desc: 'Miscellaneous expenses, emergency fees, or cash withdrawals.' }
 ];
 
 export default function ExpenseCategories() {
