@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api, { budgetAPI, savingsGoalAPI } from '../api/client';
+import { IconFood, IconTransport, IconHousing, IconBills, IconShopping, IconHealthcare, IconEducation, IconEntertainment, IconTravel, IconFallback, IconTarget, IconAdd, IconEdit, IconDelete, IconBolt, IconCheck, IconClose, IconArrowRight, IconIncome } from '../utils/icons';
 
 // Currency Formatter (INR)
 const formatCurrency = (value) => {
@@ -11,19 +12,19 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-// Category Emojis
+// Category Icons
 const getCategoryIcon = (category) => {
   const cat = category?.toLowerCase() || '';
-  if (cat.includes('food')) return '🍔';
-  if (cat.includes('transport')) return '🚗';
-  if (cat.includes('housing')) return '🏠';
-  if (cat.includes('bill')) return '💡';
-  if (cat.includes('shopping')) return '🛍️';
-  if (cat.includes('health')) return '🏥';
-  if (cat.includes('education')) return '🎓';
-  if (cat.includes('entertainment')) return '🍿';
-  if (cat.includes('travel')) return '✈️';
-  return '💸';
+  if (cat.includes('food')) return <IconFood size={14} />;
+  if (cat.includes('transport')) return <IconTransport size={14} />;
+  if (cat.includes('housing')) return <IconHousing size={14} />;
+  if (cat.includes('bill')) return <IconBills size={14} />;
+  if (cat.includes('shopping')) return <IconShopping size={14} />;
+  if (cat.includes('health')) return <IconHealthcare size={14} />;
+  if (cat.includes('education')) return <IconEducation size={14} />;
+  if (cat.includes('entertainment')) return <IconEntertainment size={14} />;
+  if (cat.includes('travel')) return <IconTravel size={14} />;
+  return <IconFallback size={14} />;
 };
 
 // Savings Goal SVG Icons
@@ -133,7 +134,7 @@ export default function Budget() {
 
       setIsMockMode(false);
     } catch (error) {
-      console.warn('⚠️ Server offline, falling back to LocalStorage Mock Mode.');
+      console.warn('[Warning] Server offline, falling back to LocalStorage Mock Mode.');
       
       // Load offline budgets
       const localBuds = localStorage.getItem('local_budgets');
@@ -385,7 +386,7 @@ export default function Budget() {
   if (loading) {
     return (
       <div className="page-body" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh', gap: '16px' }}>
-        <div className="avatar" style={{ width: '60px', height: '60px', fontSize: '2rem', animation: 'pulse 1.5s infinite ease-in-out' }}>🎯</div>
+        <div className="avatar" style={{ width: '60px', height: '60px', fontSize: '2rem', animation: 'pulse 1.5s infinite ease-in-out' }}><IconTarget size={40} /></div>
         <h3>Loading Budgets & Goals...</h3>
         <p style={{ color: 'var(--text-secondary)' }}>Configuring financial plan</p>
       </div>
@@ -402,7 +403,7 @@ export default function Budget() {
       {/* Toast Notification */}
       {toast && (
         <div className={`toast ${toast.type}`}>
-          {toast.type === 'success' ? '✓' : '✕'} {toast.message}
+          {toast.type === 'success' ? <IconCheck size={16} /> : <IconClose size={16} />} {toast.message}
         </div>
       )}
 
@@ -414,7 +415,7 @@ export default function Budget() {
         </div>
         {isMockMode && (
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: 'rgba(249, 115, 22, 0.1)', border: '1px solid var(--orange)', color: 'var(--orange)', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 600 }}>
-            <span>⚡ Offline Storage Mode</span>
+            <span><IconBolt size={14} /> Offline Storage Mode</span>
           </div>
         )}
       </div>
@@ -431,7 +432,7 @@ export default function Budget() {
                 <h2 style={{ fontSize: '1.8rem', fontWeight: 800, marginTop: '4px' }}>{formatCurrency(monthlyLimit)}</h2>
               </div>
               <button className="btn btn-sm btn-outline" onClick={() => { setTempLimit(monthlyLimit.toString()); setMonthlyLimitModal(true); }}>
-                ✏️ Edit Limit
+                <IconEdit size={16} /> Edit Limit
               </button>
             </div>
             
@@ -495,14 +496,14 @@ export default function Budget() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Category Budgets</h3>
             <button className="btn btn-sm btn-primary" onClick={() => setCategoryModal(true)}>
-              ➕ Add Budget
+              <IconAdd size={16} /> Add Budget
             </button>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             {budgets.length === 0 ? (
               <div className="empty-state" style={{ padding: '40px 0' }}>
-                <div className="empty-icon" style={{ fontSize: '2.5rem' }}>💸</div>
+                <div className="empty-icon" style={{ fontSize: '2.5rem' }}><IconFallback size={40} /></div>
                 <p>No category budgets configured.</p>
                 <button className="btn btn-sm btn-outline" style={{ marginTop: '12px' }} onClick={() => setCategoryModal(true)}>Set Category Limit</button>
               </div>
@@ -540,7 +541,7 @@ export default function Budget() {
                           onClick={() => handleDeleteBudget(b.id)}
                           title="Delete budget"
                         >
-                          🗑️
+                          <IconDelete size={14} />
                         </button>
                       </div>
                     </div>
@@ -561,14 +562,14 @@ export default function Budget() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Savings Goals</h3>
               <button className="btn btn-sm btn-primary" onClick={() => setSavingsGoalModal(true)}>
-                ➕ Add Goal
+                <IconAdd size={16} /> Add Goal
               </button>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
               {savingsGoals.length === 0 ? (
                 <div className="empty-state" style={{ padding: '40px 0' }}>
-                  <div className="empty-icon" style={{ fontSize: '2.5rem' }}>🎯</div>
+                  <div className="empty-icon" style={{ fontSize: '2.5rem' }}><IconTarget size={40} /></div>
                   <p>No savings goals set.</p>
                   <button className="btn btn-sm btn-outline" style={{ marginTop: '12px' }} onClick={() => setSavingsGoalModal(true)}>Create Savings Target</button>
                 </div>
@@ -596,7 +597,7 @@ export default function Budget() {
                           onClick={() => handleDeleteGoal(g.id)}
                           title="Delete Goal"
                         >
-                          🗑️
+                          <IconDelete size={14} />
                         </button>
                       </div>
 
@@ -618,7 +619,7 @@ export default function Budget() {
 
                       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
                         <button className="btn btn-sm btn-outline" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', padding: '6px 14px' }} onClick={() => { setSavingsTopUp({ id: g.id, amount: '' }); setAddSavingsModal(true); }}>
-                          💰 Add Savings
+                          <IconIncome size={16} /> Add Savings
                         </button>
                       </div>
                     </div>
