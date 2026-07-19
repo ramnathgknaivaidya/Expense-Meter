@@ -13,8 +13,8 @@ const connectDB = async () => {
     console.log(`MongoDB Connected: ${connect.connection.host}`);
     console.log(`Database Name: ${connect.connection.name}`);
   } catch (error) {
-    console.warn(`MongoDB unavailable (${error.message}) — running without database`);
-    console.warn('Update MONGODB_URI in .env to connect');
+    console.warn(`⚠️ MongoDB unavailable (${error.message}) — running in offline API mode`);
+    console.warn('⚠️ All data operations will return errors. Start MongoDB or update MONGODB_URI in .env');
     isConnected = false;
   }
 };
