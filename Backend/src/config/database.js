@@ -12,7 +12,7 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-import mongoose from 'mongoose';
+
 
 let isConnected = false;
 
