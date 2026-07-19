@@ -1,19 +1,5 @@
 import mongoose from 'mongoose';
 
-const connectDB = async () => {
-  try {
-    const connect = await mongoose.connect(process.env.MONGODB_URI);
-
-    console.log(`MongoDB Connected: ${connect.connection.host}`);
-    console.log(`Database Name: ${connect.connection.name}`);
-  } catch (error) {
-    console.error(`MongoDB Connection Error: ${error.message}`);
-    // Exit the process with failure
-    process.exit(1);
-  }
-};
-
-
 let isConnected = false;
 
 export const getConnectionStatus = () => isConnected;
@@ -27,8 +13,8 @@ const connectDB = async () => {
     console.log(`MongoDB Connected: ${connect.connection.host}`);
     console.log(`Database Name: ${connect.connection.name}`);
   } catch (error) {
-    console.warn(`⚠️ MongoDB unavailable (${error.message}) — running in offline API mode`);
-    console.warn('⚠️ All data operations will return errors. Start MongoDB or update MONGODB_URI in .env');
+    console.warn(`MongoDB unavailable (${error.message}) — running without database`);
+    console.warn('Update MONGODB_URI in .env to connect');
     isConnected = false;
   }
 };
@@ -36,21 +22,5 @@ const connectDB = async () => {
 mongoose.connection.on('connected', () => { isConnected = true; console.log('Mongoose connected to MongoDB'); });
 mongoose.connection.on('error', (err) => { console.error(`Mongoose connection error: ${err}`); });
 mongoose.connection.on('disconnected', () => { isConnected = false; console.log('Mongoose disconnected from MongoDB'); });
-
-export default connectDB;
-
-// Connection event listeners
-mongoose.connection.on('connected', () => {
-  console.log('Mongoose connected to MongoDB');
-});
-
-mongoose.connection.on('error', (err) => {
-  console.error(`Mongoose connection error: ${err}`);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('Mongoose disconnected from MongoDB');
-});
-
 
 export default connectDB;
