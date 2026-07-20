@@ -180,7 +180,7 @@ export default function Expense() {
         ) : (
           <div>
             {expenses.slice().reverse().map((exp) => (
-              <div key={exp._id} className="transaction-card">
+              <div key={exp.id} className="transaction-card">
                 <div className="tx-icon" style={{ background: 'var(--red-light)', color: 'var(--red)' }}>
                   {categoryIcons[exp.category] || '📋'}
                 </div>
@@ -197,9 +197,9 @@ export default function Expense() {
                   <button className="btn btn-sm btn-outline" onClick={() => handleEditExpense(exp)} title="Edit">
                     <IconEdit size={16} />
                   </button>
-                  {deletingId === exp._id ? (
+                  {deletingId === exp.id ? (
                     <div style={{ display: 'flex', gap: '4px' }}>
-                      <button className="btn btn-sm btn-danger" onClick={() => handleDeleteExpense(exp._id)}>
+                      <button className="btn btn-sm btn-danger" onClick={() => handleDeleteExpense(exp.id)}>
                         Confirm
                       </button>
                       <button className="btn btn-sm btn-outline" onClick={() => setDeletingId(null)}>
@@ -207,7 +207,7 @@ export default function Expense() {
                       </button>
                     </div>
                   ) : (
-                    <button className="btn btn-sm btn-outline" style={{ color: 'var(--red)' }} onClick={() => setDeletingId(exp._id)} title="Delete">
+                    <button className="btn btn-sm btn-outline" style={{ color: 'var(--red)' }} onClick={() => setDeletingId(exp.id)} title="Delete">
                       <IconDelete size={16} />
                     </button>
                   )}
