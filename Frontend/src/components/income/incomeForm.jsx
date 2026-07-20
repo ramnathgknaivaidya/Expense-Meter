@@ -18,7 +18,7 @@ const PAYMENT_METHODS = [
   { id: 'Card', icon: <IconCard size={16} /> },
 ];
 
-export default function IncomeForm({ onSubmit, onToast }) {
+export default function IncomeForm({ onSubmit, onToast, editingIncome, onCancelEdit }) {
   const [amount, setAmount] = useState('');
   const [source, setSource] = useState('Salary');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -27,11 +27,23 @@ export default function IncomeForm({ onSubmit, onToast }) {
   const [hasDraft, setHasDraft] = useState(false);
 
   useEffect(() => {
-    const draft = localStorage.getItem('income_draft');
-    if (draft) {
-      setHasDraft(true);
+    if (editingIncome) {
+      setAmount(editingIncome.amount?.toString() || '');
+      setSource(editingIncome.source || 'Salary');
+      setDate(editingIncome.date ? new Date(editingIncome.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]);
+      setPaymentMethod(editingIncome.paymentMethod || 'Bank Transfer');
+      setDescription(editingIncome.description || '');
     }
-  }, []);
+  }, [editingIncome]);
+
+  useEffect(() => {
+    if (!editingIncome) {
+      const draft = localStorage.getItem('income_draft');
+      if (draft) {
+        setHasDraft(true);
+      }
+    }
+  }, [editingIncome]);
 
   const handleSaveDraft = () => {
     const draftData = {
@@ -82,7 +94,11 @@ export default function IncomeForm({ onSubmit, onToast }) {
       description: description.trim(),
     };
 
-    onSubmit(incomeData);
+    if (editingIncome) {
+      onSubmit({ ...incomeData, id: editingIncome.id });
+    } else {
+      onSubmit(incomeData);
+    }
     handleClearForm();
   };
 
@@ -90,18 +106,18 @@ export default function IncomeForm({ onSubmit, onToast }) {
     <div className="card">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', gap: '12px' }}>
         <div>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Add New Income</h3>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>{editingIncome ? 'Edit Income' : 'Add New Income'}</h3>
           <p style={{ color: 'var(--text-secondary)', marginTop: '6px', maxWidth: '520px' }}>
-            Enter income details with clean fields for amount, source, date, payment method, and a short description.
+            {editingIncome ? 'Update the income entry details below.' : 'Enter income details with clean fields for amount, source, date, payment method, and a short description.'}
           </p>
         </div>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {hasDraft && (
+          {!editingIncome && hasDraft && (
             <button type="button" className="btn btn-sm btn-outline" onClick={handleLoadDraft}>
               <IconDraft size={16} /> Load Draft
             </button>
           )}
-          <button type="button" className="btn btn-sm btn-outline" onClick={handleClearForm}>
+          <button type="button" className="btn btn-sm btn-outline" onClick={editingIncome ? onCancelEdit : handleClearForm}>
             <IconClose size={16} /> Cancel
           </button>
         </div>
@@ -169,9 +185,9 @@ export default function IncomeForm({ onSubmit, onToast }) {
 
         <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
           <button type="submit" className="btn btn-primary" style={{ flex: 1.5, justifyContent: 'center' }}>
-            Save income
+            {editingIncome ? 'Update Income' : 'Save Income'}
           </button>
-          <button type="button" className="btn btn-outline" style={{ flex: 1, justifyContent: 'center' }} onClick={handleClearForm}>
+          <button type="button" className="btn btn-outline" style={{ flex: 1, justifyContent: 'center' }} onClick={editingIncome ? onCancelEdit : handleClearForm}>
             Cancel
           </button>
         </div>
