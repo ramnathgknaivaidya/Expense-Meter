@@ -185,8 +185,8 @@ export default function Income() {
           </div>
         ) : (
           <div>
-            {income.slice().reverse().map((inc) => (
-              <div key={inc._id} className="transaction-card">
+              {income.slice().reverse().map((inc) => (
+              <div key={inc.id} className="transaction-card">
                 <div className="tx-icon" style={{ background: 'var(--green-light)', color: 'var(--green)' }}>
                   {sourceIcons[inc.source] || '💰'}
                 </div>
@@ -203,9 +203,9 @@ export default function Income() {
                   <button className="btn btn-sm btn-outline" onClick={() => handleEditIncome(inc)} title="Edit">
                     <IconEdit size={16} />
                   </button>
-                  {deletingId === inc._id ? (
+                  {deletingId === inc.id ? (
                     <div style={{ display: 'flex', gap: '4px' }}>
-                      <button className="btn btn-sm btn-danger" onClick={() => handleDeleteIncome(inc._id)}>
+                      <button className="btn btn-sm btn-danger" onClick={() => handleDeleteIncome(inc.id)}>
                         Confirm
                       </button>
                       <button className="btn btn-sm btn-outline" onClick={() => setDeletingId(null)}>
@@ -213,7 +213,7 @@ export default function Income() {
                       </button>
                     </div>
                   ) : (
-                    <button className="btn btn-sm btn-outline" style={{ color: 'var(--red)' }} onClick={() => setDeletingId(inc._id)} title="Delete">
+                    <button className="btn btn-sm btn-outline" style={{ color: 'var(--red)' }} onClick={() => setDeletingId(inc.id)} title="Delete">
                       <IconDelete size={16} />
                     </button>
                   )}
