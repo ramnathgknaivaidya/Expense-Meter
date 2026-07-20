@@ -22,7 +22,7 @@ const PAYMENT_METHODS = [
   { id: 'Bank Transfer', icon: <IconBank size={16} /> }
 ];
 
-export default function ExpenseForm({ onSubmit, onToast }) {
+export default function ExpenseForm({ onSubmit, onToast, editingExpense, onCancelEdit }) {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('Food');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -32,13 +32,25 @@ export default function ExpenseForm({ onSubmit, onToast }) {
   const [receiptFile, setReceiptFile] = useState(null);
   const [hasDraft, setHasDraft] = useState(false);
 
-  // Check for saved draft on mount
   useEffect(() => {
-    const draft = localStorage.getItem('expense_draft');
-    if (draft) {
-      setHasDraft(true);
+    if (editingExpense) {
+      setAmount(editingExpense.amount?.toString() || '');
+      setCategory(editingExpense.category || 'Food');
+      setDate(editingExpense.date ? new Date(editingExpense.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]);
+      setPaymentMethod(editingExpense.paymentMethod || 'UPI');
+      setMerchant(editingExpense.merchant || '');
+      setNotes(editingExpense.description || '');
     }
-  }, []);
+  }, [editingExpense]);
+
+  useEffect(() => {
+    if (!editingExpense) {
+      const draft = localStorage.getItem('expense_draft');
+      if (draft) {
+        setHasDraft(true);
+      }
+    }
+  }, [editingExpense]);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -108,7 +120,11 @@ export default function ExpenseForm({ onSubmit, onToast }) {
       receipt: receiptFile ? receiptFile.name : null
     };
 
-    onSubmit(expenseData);
+    if (editingExpense) {
+      onSubmit({ ...expenseData, id: editingExpense.id });
+    } else {
+      onSubmit(expenseData);
+    }
 
     // Reset Form
     setAmount('');
@@ -123,8 +139,8 @@ export default function ExpenseForm({ onSubmit, onToast }) {
   return (
     <div className="card">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Record New Expense</h3>
-        {hasDraft && (
+        <h3 style={{ fontSize: '1.2rem', fontWeight: 700 }}>{editingExpense ? 'Edit Expense' : 'Record New Expense'}</h3>
+        {!editingExpense && hasDraft && (
           <div style={{ display: 'flex', gap: '8px' }}>
             <button type="button" className="btn btn-sm btn-outline" onClick={handleLoadDraft}>
               <IconDraft size={16} /> Load Draft
@@ -240,7 +256,7 @@ export default function ExpenseForm({ onSubmit, onToast }) {
 
         <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
           <button type="submit" className="btn btn-primary" style={{ flex: 1.5, background: 'var(--orange)', justifyContent: 'center' }}>
-            <IconExpense size={16} /> Add Expense
+            <IconExpense size={16} /> {editingExpense ? 'Update Expense' : 'Add Expense'}
           </button>
           <button type="button" className="btn btn-outline" style={{ flex: 1, justifyContent: 'center' }} onClick={handleSaveDraft}>
             <IconBackup size={16} /> Save Draft
